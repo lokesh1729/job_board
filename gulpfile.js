@@ -119,7 +119,8 @@ function initBrowserSync() {
         `${paths.templates}/*.html`
       ], {
         // https://www.browsersync.io/docs/options/#option-proxy
-        proxy: 'localhost:8000'
+        proxy: 'localhost:8000',
+        open: false
       }
     )
 }

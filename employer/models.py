@@ -21,6 +21,7 @@ class Employer(BaseModel):
 
     name = models.CharField(_("Employer Name"), max_length=100)
     industry = models.CharField(_("Industry"), max_length=100)
+    profile = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
 
 
 class Recruiter(BaseModel):

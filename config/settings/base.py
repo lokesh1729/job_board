@@ -78,6 +78,8 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "job_board.users",
+    "candidate.apps.CandidateConfig",
+    "employer.apps.EmployerConfig",
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -136,6 +138,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.common.BrokenLinkEmailsMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "job_board.users.middleware.RoleMiddleware"
 ]
 
 # STATIC

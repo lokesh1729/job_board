@@ -59,8 +59,10 @@
                 </li>
               {% else %}
                 <li class="nav-item">
-                  {# URL provided by django-allauth/account/urls.py #}
-                  <a id="sign-up-link" class="nav-link" href="{% url 'account_signup' %}">{% translate "Sign Up" %}</a>
+                  <a id="candidate-sign-up-link" class="nav-link" href="{% url 'candidate:signup' %}">{% translate "Candidate Sign Up" %}</a>
+                </li>
+              <li class="nav-item">
+                  <a id="employer-sign-up-link" class="nav-link" href="{% url 'employer:signup' %}">{% translate "Employer Sign Up" %}</a>
                 </li>
                 <li class="nav-item">
                   {# URL provided by django-allauth/account/urls.py #}
