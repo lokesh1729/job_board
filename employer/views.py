@@ -25,4 +25,4 @@ class EmployerSignupView(views.SignupView):
 
 class EmployerDashboardView(RolePermissionMixin, TemplateView, LoginRequiredMixin):
     template_name = "emp_dashboard.html"
-    role = Role.EMPLOYER.value
+    role = Role.EMPLOYER

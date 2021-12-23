@@ -26,4 +26,4 @@ class CandidateSignupView(views.SignupView):
 
 class CandidateDashboardView(RolePermissionMixin, LoginRequiredMixin, TemplateView):
     template_name = "cand_dashboard.html"
-    role = Role.CANDIDATE.value
+    role = Role.CANDIDATE

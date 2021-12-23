@@ -36,11 +36,11 @@ class AccountAdapter(DefaultAccountAdapter):
 
     def get_login_redirect_url(self, request):
         utils.set_user_role(request)
-        if request.user.role == Role.CANDIDATE.value:
+        if request.user.role == Role.CANDIDATE:
             return resolve_url("candidate:dashboard")
-        if request.user.role == Role.EMPLOYER.value:
+        if request.user.role == Role.EMPLOYER:
             return resolve_url("employer:dashboard")
-        if request.user.role == Role.ADMIN.value:
+        if request.user.role == Role.ADMIN:
             return resolve_url("admin:index")
 
     def get_signup_redirect_url(self, request):
