@@ -19,6 +19,7 @@ class Candidate(BaseModel):
         abstract = False
 
     resume = models.FilePathField(null=True, blank=True)
+    onboarding_done = models.BooleanField(default=False)
     profile = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
 
 

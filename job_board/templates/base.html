@@ -22,10 +22,10 @@
     {# Placed at the top of the document so pages load faster with defer #}
     {% block javascript %}
       <!-- Vendor dependencies bundled as one file-->
-      <script defer src="{% static 'js/vendors.js' %}"></script>
+      {% comment %} <script defer src="{% static 'js/vendors.min.js' %}"></script> {% endcomment %}
 
       <!-- place project specific Javascript in this file -->
-      <script defer src="{% static 'js/project.js' %}"></script>
+      <script defer src="{% static 'js/bundle.min.js' %}"></script>
 
     {% endblock javascript %}
 

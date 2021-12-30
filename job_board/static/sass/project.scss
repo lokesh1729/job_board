@@ -1,14 +1,33 @@
+// Custom.scss
+// Option B: Include parts of Bootstrap
 
-@import "custom_bootstrap_vars";
-@import "bootstrap";
+// 1. Include functions first (so you can manipulate colors, SVGs, calc, etc)
+@import "bootstrap/scss/functions";
 
+// 2. Include any default variable overrides here
 
+@import "custom_bootstrap_vars.scss";
 
+// 3. Include remainder of required Bootstrap stylesheets
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+
+@import "bootstrap/scss/bootstrap.scss";
+
+@import "bootstrap-datepicker/dist/css/bootstrap-datepicker";
+
+@import "./candidate_onboarding.scss";
+
+@import "@fortawesome/fontawesome-free/scss/fontawesome.scss";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 // project specific CSS goes here
 
 ////////////////////////////////
-		//Variables//
+//Variables//
 ////////////////////////////////
 
 // Alert colors
@@ -21,7 +40,7 @@ $dark-pink: #eed3d7;
 $red: #b94a48;
 
 ////////////////////////////////
-		//Alerts//
+//Alerts//
 ////////////////////////////////
 
 // bootstrap alert CSS, translated to the django-standard levels of
