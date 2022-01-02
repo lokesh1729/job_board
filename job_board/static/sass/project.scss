@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 // Custom.scss
 // Option B: Include parts of Bootstrap
 
@@ -19,10 +23,6 @@
 @import "./candidate_onboarding.scss";
 
 @import "@fortawesome/fontawesome-free/scss/fontawesome.scss";
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 // project specific CSS goes here
 

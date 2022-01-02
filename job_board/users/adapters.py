@@ -37,6 +37,8 @@ class AccountAdapter(DefaultAccountAdapter):
     def get_login_redirect_url(self, request):
         utils.set_user_role(request)
         if request.user.role == Role.CANDIDATE:
+            if not request.user.profile.candidate.onboarding_done:
+                return resolve_url("candidate:onboarding")
             return resolve_url("candidate:dashboard")
         if request.user.role == Role.EMPLOYER:
             return resolve_url("employer:dashboard")

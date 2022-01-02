@@ -31,3 +31,12 @@ class CandidateDashboardView(RolePermissionMixin, LoginRequiredMixin, TemplateVi
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         kwargs['candidate'] = self.request.user.profile.candidate
         return super().get_context_data(**kwargs)
+
+
+class CandidateOnboardingView(RolePermissionMixin, LoginRequiredMixin, TemplateView):
+    template_name = "candidate/onboarding.html"
+    role = Role.CANDIDATE
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        kwargs['candidate'] = self.request.user.profile.candidate
+        return super().get_context_data(**kwargs)

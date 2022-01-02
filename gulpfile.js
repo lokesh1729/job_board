@@ -96,20 +96,24 @@ function styles() {
       )
       .pipe(plumber()) // Checks for errors
       // .pipe(postcss())
-      // .pipe(
-      //   gulpif(
-      //     process.env.NODE_ENV == "production",
-      //     purgecss({
-      //       content: [`${paths.templates}/**/*.html`],
-      //       extractors: [
-      //         {
-      //           extractor: TailwindExtractor,
-      //           extensions: ["html", "js", "scss"],
-      //         },
-      //       ],
-      //     })
-      //   )
-      // )
+      .pipe(
+        gulpif(
+          process.env.NODE_ENV == "production",
+          purgecss({
+            content: [
+              `${paths.templates}/**/*.html`,
+              `${paths.sass}/**/*.scss`,
+              `${paths.js}/**/*.js`,
+            ],
+            extractors: [
+              {
+                extractor: TailwindExtractor,
+                extensions: ["html", "js", "scss"],
+              },
+            ],
+          })
+        )
+      )
       .pipe(dest(paths.css))
       .pipe(postcss(processCss))
       .pipe(rename({ suffix: ".min" }))

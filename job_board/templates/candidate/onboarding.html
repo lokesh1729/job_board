@@ -1,31 +1,34 @@
-<div class="tw-my-16 tw-mx-8">
-  <div class="tw-absolute tw-h-1 tw-w-10/12 tw-bg-blue-400 tw-top-32 tw-left-12"></div>
-  <div class="tw-flex tw-flex-col tw-max-h-full">
-    <div class="tw-flex tw-justify-between">
-      <div class="tw-cursor-pointer">
-        <div class="tw-shadow-md tw-w-32 tw-h-32 tw-rounded-full tw-bg-blue-400 tw-text-white">
-          <svg class="tw-w-24 tw-h-12 tw-inline-block tw-relative tw-top-10 tw-left-4" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="file-alt" class="svg-inline--fa fa-file-alt fa-w-12" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M224 136V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zm64 236c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-8c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12v8zm0-64c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-8c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12v8zm0-72v8c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-8c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12zm96-114.1v6.1H256V0h6.1c6.4 0 12.5 2.5 17 7l97.9 98c4.5 4.5 7 10.6 7 16.9z"></path></svg>
+{% extends 'base.html' %}
+{% block content %}
+  <div class="tw-my-16 tw-mx-8">
+    <div class="tw-absolute tw-h-1 tw-w-10/12 tw-bg-blue-400 tw-top-32 tw-left-12"></div>
+    <div class="tw-flex tw-flex-col tw-max-h-full">
+      <div class="tw-flex tw-justify-between">
+        <div class="tw-cursor-pointer">
+          <div class="tw-shadow-md tw-w-32 tw-h-32 tw-rounded-full tw-bg-blue-400 tw-text-white">
+            <i class="fas fa-university tw-text-4xl tw-inline-block tw-relative tw-top-1/3 tw-left-1/3"></i>
+          </div>
+          <div class="tw-text-black tw-font-semibold tw-text-lg tw-m-4">education</div>
         </div>
-        <div class="tw-text-black tw-font-semibold tw-text-lg tw-m-4">Education</div>
-      </div>
-      <div class="tw-cursor-pointer">
-        <div class="tw-shadow-md tw-w-32 tw-h-32 tw-rounded-full tw-bg-blue-400 tw-text-white">
-          <svg class="tw-w-24 tw-h-12 tw-inline-block tw-relative tw-top-10 tw-left-4" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="file-alt" class="svg-inline--fa fa-file-alt fa-w-12" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M224 136V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zm64 236c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-8c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12v8zm0-64c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-8c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12v8zm0-72v8c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-8c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12zm96-114.1v6.1H256V0h6.1c6.4 0 12.5 2.5 17 7l97.9 98c4.5 4.5 7 10.6 7 16.9z"></path></svg>
+        <div class="tw-cursor-pointer">
+          <div class="tw-shadow-md tw-w-32 tw-h-32 tw-rounded-full tw-bg-blue-400 tw-text-white">
+            <i class="fas fa-briefcase tw-text-4xl tw-inline-block tw-relative tw-top-1/3 tw-left-1/3"></i>
+          </div>
+          <div class="tw-text-black tw-font-semibold tw-text-lg tw-m-4">work history</div>
         </div>
-        <div class="tw-text-black tw-font-semibold tw-text-lg tw-m-4">Education</div>
-      </div>
-      <div class="tw-cursor-pointer">
-        <div class="tw-shadow-md tw-w-32 tw-h-32 tw-rounded-full tw-bg-blue-400 tw-text-white">
-          <svg class="tw-w-24 tw-h-12 tw-inline-block tw-relative tw-top-10 tw-left-4" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="file-alt" class="svg-inline--fa fa-file-alt fa-w-12" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M224 136V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zm64 236c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-8c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12v8zm0-64c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-8c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12v8zm0-72v8c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-8c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12zm96-114.1v6.1H256V0h6.1c6.4 0 12.5 2.5 17 7l97.9 98c4.5 4.5 7 10.6 7 16.9z"></path></svg>
+        <div class="tw-cursor-pointer">
+          <div class="tw-shadow-md tw-w-32 tw-h-32 tw-rounded-full tw-bg-blue-400 tw-text-white">
+            <i class="fas fa-project-diagram tw-text-4xl tw-inline-block tw-relative tw-top-1/3 tw-left-1/3"></i>
+          </div>
+          <div class="tw-text-black tw-font-semibold tw-text-lg tw-m-4">projects & skills</div>
         </div>
-        <div class="tw-text-black tw-font-semibold tw-text-lg tw-m-4">Education</div>
       </div>
-    </div>
-    <div class="tw-mt-8 tw-ml-4">
-      <form action="/api/fck" method="POST">
-        <label for="username">Username: </label>
-        <input id="username" type="text" class="tw-appearance-none tw-inline-block tw-w-48 tw-h-8 tw-px-3 tw-py-2 tw-text-base tw-font-normal tw-text-gray-700 tw-bg-white tw-bg-clip-padding tw-border tw-border-solid tw-border-gray-300 tw-rounded tw-transition tw-ease-in-out tw-mx-2 tw-focus:text-gray-700 tw-focus:bg-white tw-focus:border-blue-600 tw-focus:outline-none" />
-      </form>
+      <div class="tw-mt-8 tw-ml-4">
+        <form action="/api/fck" method="POST">
+          <label for="username">Username: </label>
+          <input id="username" type="text" class="tw-appearance-none tw-inline-block tw-w-48 tw-h-8 tw-px-3 tw-py-2 tw-text-base tw-font-normal tw-text-gray-700 tw-bg-white tw-bg-clip-padding tw-border tw-border-solid tw-border-gray-300 tw-rounded tw-transition tw-ease-in-out tw-mx-2 tw-focus:text-gray-700 tw-focus:bg-white tw-focus:border-blue-600 tw-focus:outline-none" />
+        </form>
+      </div>
     </div>
   </div>
-</div>
+{% endblock %}
