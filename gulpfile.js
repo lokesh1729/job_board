@@ -98,7 +98,7 @@ function styles() {
       // .pipe(postcss())
       .pipe(
         gulpif(
-          process.env.NODE_ENV == "production",
+          process.env.NODE_ENV === "production",
           purgecss({
             content: [
               `${paths.templates}/**/*.html`,
@@ -122,6 +122,7 @@ function styles() {
   );
 }
 
+// ref - https://stackoverflow.com/a/59786169/5123867
 // Javascript minification
 function scripts() {
   return (
@@ -130,7 +131,11 @@ function scripts() {
       input: `${paths.js}/project.js`,
 
       // Apply plugins
-      plugins: [babel, commonjs, nodeResolve],
+      plugins: [
+        babel,
+        commonjs,
+        nodeResolve
+      ],
 
       // Use cache for better performance
       cache: cache,
@@ -153,7 +158,7 @@ function scripts() {
       .pipe(source("bundle.js"))
       .pipe(buffer())
       .pipe(plumber()) // Checks for errors
-      .pipe(uglify()) // Minifies the js
+      .pipe(gulpif(process.env.NODE_ENV === "production", uglify())) // Minifies the js
       // The use of sourcemaps here might not be necessary,
       // Gulp 4 has some native sourcemap support built in
       .pipe(sourcemaps.init({ loadMaps: true }))

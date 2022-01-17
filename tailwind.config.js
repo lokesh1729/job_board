@@ -1,4 +1,5 @@
 module.exports = {
+  important: true,
   content: [
     "./job_board/templates/**/*.html",
     "./job_board/static/sass/**/*.scss",
@@ -11,6 +12,8 @@ module.exports = {
   plugins: [],
   prefix: "tw-",
   theme: {
+    extend: {
+    },
     screens: {
       sm: "576px",
       md: "768px",

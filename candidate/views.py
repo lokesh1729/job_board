@@ -34,7 +34,7 @@ class CandidateDashboardView(RolePermissionMixin, LoginRequiredMixin, TemplateVi
 
 
 class CandidateOnboardingView(RolePermissionMixin, LoginRequiredMixin, TemplateView):
-    template_name = "candidate/onboarding.html"
+    template_name = "candidate/onboarding/main.html"
     role = Role.CANDIDATE
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
