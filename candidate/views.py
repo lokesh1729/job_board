@@ -2,10 +2,11 @@ from typing import Dict, Any
 
 from allauth.account import views
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect
+from django.urls import reverse
 from django.views.generic import TemplateView
 
 from candidate.forms import CandidateSignupForm
-from candidate.models import Candidate
 from job_board.users.constants import Role
 from job_board.utils.mixins import RolePermissionMixin
 
@@ -24,7 +25,7 @@ class CandidateSignupView(views.SignupView):
         return kwargs
 
 
-class CandidateDashboardView(RolePermissionMixin, LoginRequiredMixin, TemplateView):
+class CandidateDashboardView(LoginRequiredMixin, RolePermissionMixin, TemplateView):
     template_name = "candidate/dashboard.html"
     role = Role.CANDIDATE
 
@@ -32,8 +33,12 @@ class CandidateDashboardView(RolePermissionMixin, LoginRequiredMixin, TemplateVi
         kwargs['candidate'] = self.request.user.profile.candidate
         return super().get_context_data(**kwargs)
 
+    def get(self, request, *args, **kwargs):
+        if not request.user.profile.candidate.onboarding_done:
+            return redirect(reverse("candidate:onboarding"))
 
-class CandidateOnboardingView(RolePermissionMixin, LoginRequiredMixin, TemplateView):
+
+class CandidateOnboardingView(LoginRequiredMixin, RolePermissionMixin, TemplateView):
     template_name = "candidate/onboarding/main.html"
     role = Role.CANDIDATE
 

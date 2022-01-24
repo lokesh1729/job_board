@@ -13,6 +13,12 @@ module.exports = {
   prefix: "tw-",
   theme: {
     extend: {
+      flexGrow: {
+        '2': 2
+      },
+      flexShrink: {
+        '2': 2
+      }
     },
     screens: {
       sm: "576px",
