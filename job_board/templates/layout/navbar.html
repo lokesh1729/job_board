@@ -8,7 +8,7 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
-        {% if request.user.is_authenticated %}
+        {% if request.user.is_authenticated and request.user.is_staff is False %}
           {% with is_candidate=request.user|is_candidate %}
           {% with is_employer=request.user|is_employer %}
             {% if is_candidate %}

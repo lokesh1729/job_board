@@ -13,12 +13,17 @@ module.exports = {
   prefix: "tw-",
   theme: {
     extend: {
+      colors: {
+        blue: {
+          600: "#176DFC",
+        },
+      },
       flexGrow: {
-        '2': 2
+        2: 2,
       },
       flexShrink: {
-        '2': 2
-      }
+        2: 2,
+      },
     },
     screens: {
       sm: "576px",

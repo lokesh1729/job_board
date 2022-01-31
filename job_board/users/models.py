@@ -66,5 +66,5 @@ class UserProfile(Model):
 
 @receiver(post_save, sender=User)
 def callback(signal, sender, instance, **kwargs):
-    if instance.is_staff and instance.is_superuser:
+    if kwargs.get("created", False) is True and instance.is_staff and instance.is_superuser:
         UserProfile.objects.create(user=instance, role=constants.Role.ADMIN.name)

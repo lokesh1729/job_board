@@ -18,7 +18,7 @@ class Candidate(BaseModel):
     class Meta:
         abstract = False
 
-    resume = models.FilePathField(null=True, blank=True)
+    resume = models.FilePathField()
     onboarding_done = models.BooleanField(default=False)
     profile = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
 
