@@ -16,9 +16,6 @@ class CandidateSignupView(views.SignupView):
     form_class = CandidateSignupForm
     template_name = "account/candidate_signup.html"
 
-    def get_form_class(self):
-        return self.form_class
-
     def get_form_kwargs(self) -> Dict[str, Any]:
         kwargs = super().get_form_kwargs()
         kwargs["role"] = Role.CANDIDATE.name

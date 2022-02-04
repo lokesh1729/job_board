@@ -6,6 +6,6 @@
     @apply tw-font-bold tw-text-base tw-text-gray-800;
 }
 
-.my-custom-input {
+.textinput {
     @apply focus:tw-text-gray-900 focus:tw-bg-white focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-blue-600 focus:tw-border-transparent;
 }
