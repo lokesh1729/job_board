@@ -1,17 +1,17 @@
-.rounded-step {
-    @apply tw-shadow-md tw-w-32 tw-h-32 tw-rounded-full tw-bg-blue-600 tw-text-white;
+.step-wrapper {
+    @apply tw-cursor-pointer tw-flex tw-flex-col tw-w-36 tw-h-full tw-justify-between tw-items-center;
 }
 
-.horizontal-line {
-    @apply tw-absolute tw-h-1 tw-w-9/12 tw-bg-blue-600 tw-top-48 tw-left-28;
+.rounded-step {
+    @apply tw-shadow-md tw-w-24 tw-h-24 tw-rounded-full tw-bg-blue-600 tw-text-white;
 }
 
 .step-icon {
-    @apply tw-text-4xl tw-inline-block tw-relative tw-top-1/3 tw-left-1/3;
+    @apply tw-text-4xl tw-inline-block tw-relative tw-top-1/4 tw-left-1/3;
 }
 
 .step-text {
-    @apply tw-text-gray-800 tw-font-semibold tw-text-2xl tw-m-4;
+    @apply tw-text-gray-800 tw-font-semibold tw-text-2xl;
 }
 
 .form--wrapper {

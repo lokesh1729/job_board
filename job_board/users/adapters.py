@@ -31,7 +31,6 @@ class AccountAdapter(DefaultAccountAdapter):
                                     industry=form.cleaned_data["employer_industry"],
                                     profile=profile)
         elif form.role == constants.Role.CANDIDATE.name:
-            import ipdb;ipdb.set_trace()
             Candidate.objects.create(resume=form.cleaned_data["resume"],
                                      profile=profile)
 

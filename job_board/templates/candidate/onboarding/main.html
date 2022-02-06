@@ -1,14 +1,10 @@
 {% extends 'base.html' %} 
 {% block content %}
 <div class="tw-my-8 tw-mx-4">
-  <div
-    class="horizontal-line"
-  ></div>
-  <div class="tw-flex tw-flex-col tw-max-h-full">
-    {% include './step_header.html' %}
-    <div class="tw-p-4">
+  <div class="tw-flex tw-flex-col tw-max-h-full tw-p-4">
+      {% include './step_header.html' %}
       {% include './form.html' %}
-    </div>
+      {% include './form-navigation.html' %}
   </div>
 </div>
 {% endblock %}
