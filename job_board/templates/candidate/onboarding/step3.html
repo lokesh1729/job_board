@@ -1,4 +1,4 @@
-<div id="project-details" class="form--wrapper step2">
+<form novalidate id="project-details" class="needs-validation form--wrapper step2">
   <div data-project-id="1" class="project-details--wrapper tw-flex tw-flex-col tw-content-between">
     <div class="project-details--wrapper--form tw-h-84 tw-flex tw-flex-col tw-justify-between">
       <div class="tw-flex tw-justify-center tw-w-full">
@@ -7,6 +7,7 @@
             >Project Name</label
           >
           <input
+            required="true"
             id="project-name__1"
             name="project-name"
             type="text"
@@ -21,6 +22,7 @@
             >Project Description</label
           >
           <textarea
+          required="true"
           class="form-control textinput tw-resize-none"
           placeholder="Enter the project description"
           name="project-description" id="project-description__1"
@@ -33,6 +35,7 @@
             >Skills Used</label
           >
           <input
+            required="true"
             id="project-skills__1"
             name="project-skills"
             type="text"
@@ -59,4 +62,4 @@
       </button>
     </div>
   </div>
-</div>
+</form>

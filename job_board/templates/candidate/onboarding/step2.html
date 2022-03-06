@@ -1,4 +1,4 @@
-<div id="work-details" class="form--wrapper step2">
+<form novalidate id="work-details" class="needs-validation form--wrapper step2">
   <div data-work-id="1" class="work-details--wrapper tw-flex tw-flex-col tw-content-between">
     <div class="work-details--wrapper--form tw-h-84 tw-flex tw-flex-col tw-justify-between">
       <div class="tw-flex tw-justify-center tw-w-full">
@@ -7,6 +7,7 @@
             >Company</label
           >
           <input
+            required="true"
             id="work-company__1"
             name="work-company"
             type="text"
@@ -19,6 +20,7 @@
             >Role</label
           >
           <input
+            required="true"
             id="work-role__1"
             name="work-role"
             type="text"
@@ -33,6 +35,7 @@
             >From Date</label
           >
           <input
+            required="true"
             id="work-from-date__1"
             name="work-from-date"
             type="date"
@@ -43,6 +46,7 @@
         <div class="form-field tw-flex-grow tw-flex-shrink tw-ml-16">
           <label for="work-to-date__1" class="form-label extend-form-label">To Date</label>
           <input
+            required="true"
             id="work-to-date__1"
             name="work-to-date"
             type="date"
@@ -57,6 +61,7 @@
             >Responsibilities</label
           >
           <textarea
+          required="true"
           class="form-control textinput tw-resize-none"
           placeholder="Enter your responsibilities there!"
           name="work-resp" id="work-resp__1"
@@ -81,4 +86,4 @@
       </button>
     </div>
   </div>
-</div>
+</form>

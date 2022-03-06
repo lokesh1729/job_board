@@ -1,23 +1,12 @@
-const STEP1 = 1;
-const STEP2 = 2;
-const STEP3 = 3;
-const STEP4 = 4;
-
-let stepsMapping = {
-  [STEP1]: "education-details",
-  [STEP2]: "work-details",
-  [STEP3]: "project-details",
-  [STEP4]: "skill-details",
-};
-
-let stepsSequence = [STEP1, STEP2, STEP3, STEP4];
+import { validateStep } from "./form_validation.js";
+import { STEP1, STEP2, STEP3, STEP4, stepsMapping, stepsSequence } from "./form_state.js";
 
 let currStep = 0;
 
 function activateCurrStep(number) {
   const curr = stepsMapping[number];
-  const ele = $(`#step-header div[data-link-to=${curr}]`).children()[0];
-  $(ele).removeClass("tw-bg-gray-400");
+  const ele = $(`#step-header div[data-link-to=${curr}]`);
+  $(ele).addClass("activate-step");
   $(`#${curr}`).show();
 }
 
@@ -42,8 +31,9 @@ function gotoPreviousStep(number) {
     .filter((item) => item > number)
     .forEach((item) => {
       const currId = stepsMapping[item];
-      const ele = $(`#step-header div[data-link-to=${currId}]`).children()[0];
-      $(ele).addClass("tw-bg-gray-400");
+      // const ele = $(`#step-header div[data-link-to=${currId}]`).children()[0];
+      const ele = $(`#step-header div[data-link-to=${currId}]`);
+      $(ele).removeClass("activate-step");
       $(`#${currId}`).hide();
     });
     $("#next-btn").removeAttr("disabled");
@@ -52,15 +42,18 @@ function gotoPreviousStep(number) {
     }
 }
 
+gotoNextStep(stepsSequence[currStep]);
+gotoPreviousStep(stepsSequence[currStep]);
+
 $("#next-btn").on("click", function (event) {
-  event.preventDefault();
-  gotoNextStep(stepsSequence[++currStep]);
+  const isValid = validateStep(currStep);
+  if (!isValid) {
+    return;
+  }
+  gotoNextStep(stepsSequence[currStep]);
 });
 
 $("#prev-btn").on("click", function (event) {
-  event.preventDefault();
-  gotoPreviousStep(stepsSequence[--currStep]);
+  --currStep;
+  gotoPreviousStep(stepsSequence[currStep]);
 });
-
-gotoNextStep(stepsSequence[currStep]);
-gotoPreviousStep(stepsSequence[currStep]);

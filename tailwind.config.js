@@ -24,6 +24,10 @@ module.exports = {
       flexShrink: {
         2: 2,
       },
+      width: {
+        '68': '17rem',
+        '70': '17.5rem'
+      }
     },
     screens: {
       sm: "576px",

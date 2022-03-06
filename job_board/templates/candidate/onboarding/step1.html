@@ -1,12 +1,13 @@
-<div id="education-details" class="form--wrapper step1">
+<form novalidate id="education-details" class="form--wrapper step1 needs-validation">
   <div data-edu-id="1" class="education-details--wrapper tw-flex tw-flex-col tw-content-between">
     <div class="education-details--wrapper--form tw-h-48 tw-flex tw-flex-col tw-justify-between">
       <div class="tw-flex tw-justify-center tw-w-full">
         <div class="form-field tw-flex-grow-2 tw-flex-shrink">
           <label for="edu-school__1" class="form-label extend-form-label"
-            >School</label
+            >School <span class="tw-text-red-500">*</span> </label
           >
           <input
+            required="true"
             id="edu-school__1"
             name="edu-school"
             type="text"
@@ -16,9 +17,10 @@
         </div>
         <div class="form-field tw-flex-grow tw-flex-shrink-2 tw-ml-16">
           <label for="edu-degree__1" class="form-label extend-form-label"
-            >Degree</label
+            >Degree <span class="tw-text-red-500">*</span></label
           >
           <input
+            required="true"
             id="edu-degree__1"
             name="edu-degree"
             type="text"
@@ -30,9 +32,10 @@
       <div class="tw-flex tw-justify-between tw-w-full">
         <div class="form-field tw-flex-grow tw-flex-shrink">
           <label for="edu-from-date__1" class="form-label extend-form-label"
-            >From Date</label
+            >From Date <span class="tw-text-red-500">*</span></label
           >
           <input
+            required="true"
             id="edu-from-date__1"
             name="edu-from-date"
             type="date"
@@ -41,8 +44,9 @@
           />
         </div>
         <div class="form-field tw-flex-grow tw-flex-shrink tw-ml-16">
-          <label for="edu-to-date__1" class="form-label extend-form-label">To Date</label>
+          <label for="edu-to-date__1" class="form-label extend-form-label">To Date <span class="tw-text-red-500">*</span></label>
           <input
+            required="true"
             id="edu-to-date__1"
             name="edu-to-date"
             type="date"
@@ -69,4 +73,4 @@
       </button>
     </div>
   </div>
-</div>
+</form>

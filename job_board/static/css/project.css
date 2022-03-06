@@ -17195,12 +17195,22 @@ readers do not read off random characters that represent icons */
   @apply focus:tw-text-gray-900 focus:tw-bg-white focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-blue-600 focus:tw-border-transparent;
 }
 
-.step-wrapper {
-  @apply tw-cursor-pointer tw-flex tw-flex-col tw-w-36 tw-h-full tw-justify-between tw-items-center;
+.step-wrapper--element {
+  @apply tw-cursor-pointer tw-flex tw-flex-col tw-h-full tw-w-28 tw-justify-between tw-items-center;
+}
+.step-wrapper--element .rounded-step {
+  @apply tw-relative tw-shadow-md tw-w-24 tw-h-24 tw-rounded-full tw-bg-gray-600 tw-text-white tw-z-10;
+}
+.step-wrapper--element:not(:first-child) .rounded-step::before {
+  content: "";
+  @apply tw-absolute tw-block tw-h-0.5 tw-w-70 tw-top-1/2 tw-right-full tw-bg-gray-600;
 }
 
-.rounded-step {
-  @apply tw-shadow-md tw-w-24 tw-h-24 tw-rounded-full tw-bg-blue-600 tw-text-white;
+.activate-step > .rounded-step {
+  @apply tw-bg-blue-600;
+}
+.activate-step > .rounded-step::before {
+  @apply tw-bg-blue-600 !important;
 }
 
 .step-icon {
