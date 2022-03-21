@@ -28,8 +28,8 @@ class School(BaseModel):
         abstract = False
 
     name = models.CharField(_("School Name"), max_length=255)
-    country = models.CharField(_("Country"), max_length=100)
-    state = models.CharField(_("State"), max_length=100)
+    country = models.CharField(_("Country"), max_length=100, blank=True, null=True)
+    state = models.CharField(_("State"), max_length=100, blank=True, null=True)
 
 
 class CandidateEducation(BaseModel):
@@ -106,9 +106,7 @@ class CandidateSkill(BaseModel):
         related_name="candidate_skills",
         related_query_name="candidate_skill",
     )
-    proficiency = models.IntegerField(
-        _("Proficiency"), choices=PROFICIENCY_CHOICES
-    )
+    proficiency = models.IntegerField(_("Proficiency"), choices=PROFICIENCY_CHOICES)
     yoe = models.IntegerField(_("Years of Experience"))
 
 
@@ -131,7 +129,5 @@ class CandidateMisc(BaseModel):
     class Meta:
         abstract = False
 
-    achievements = models.TextField(
-        _("Candidate Achievements"), blank=True, null=True
-    )
+    achievements = models.TextField(_("Candidate Achievements"), blank=True, null=True)
     awards = models.TextField(_("Candidate Awards"), blank=True, null=True)
