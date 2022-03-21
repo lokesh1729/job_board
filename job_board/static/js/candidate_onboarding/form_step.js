@@ -1,5 +1,12 @@
 import { validateStep } from "./form_validation.js";
-import { STEP1, STEP2, STEP3, STEP4, stepsMapping, stepsSequence } from "./form_state.js";
+import {
+  STEP1,
+  STEP2,
+  STEP3,
+  STEP4,
+  stepsMapping,
+  stepsSequence,
+} from "./form_state.js";
 
 let currStep = 0;
 
@@ -19,10 +26,10 @@ function gotoNextStep(number) {
       const currId = stepsMapping[item];
       $(`#${currId}`).hide();
     });
-    $("#prev-btn").removeAttr("disabled");
-    if (number >= STEP4) {
-        $("#next-btn").attr("disabled", true);
-    }
+  $("#prev-btn").removeAttr("disabled");
+  if (number >= STEP4) {
+    $("#next-btn").attr("disabled", true);
+  }
 }
 
 function gotoPreviousStep(number) {
@@ -36,10 +43,10 @@ function gotoPreviousStep(number) {
       $(ele).removeClass("activate-step");
       $(`#${currId}`).hide();
     });
-    $("#next-btn").removeAttr("disabled");
-    if (number <= STEP1) {
-        $("#prev-btn").attr("disabled", true);
-    }
+  $("#next-btn").removeAttr("disabled");
+  if (number <= STEP1) {
+    $("#prev-btn").attr("disabled", true);
+  }
 }
 
 gotoNextStep(stepsSequence[currStep]);
@@ -50,10 +57,9 @@ $("#next-btn").on("click", function (event) {
   if (!isValid) {
     return;
   }
-  gotoNextStep(stepsSequence[currStep]);
+  gotoNextStep(stepsSequence[++currStep]);
 });
 
 $("#prev-btn").on("click", function (event) {
-  --currStep;
-  gotoPreviousStep(stepsSequence[currStep]);
+  gotoPreviousStep(stepsSequence[--currStep]);
 });

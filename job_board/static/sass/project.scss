@@ -6,25 +6,58 @@
 // Option B: Include parts of Bootstrap
 
 // 1. Include functions first (so you can manipulate colors, SVGs, calc, etc)
-@import "bootstrap/scss/functions";
+@import 'bootstrap/scss/functions';
 
 // 2. Include any default variable overrides here
 
-@import "custom_bootstrap_vars.scss";
+@import 'custom_bootstrap_vars.scss';
 
 // 3. Include remainder of required Bootstrap stylesheets
-@import "bootstrap/scss/variables";
-@import "bootstrap/scss/mixins";
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/mixins';
 
-@import "bootstrap/scss/bootstrap.scss";
+@import 'bootstrap/scss/bootstrap.scss';
 
-@import "@fortawesome/fontawesome-free/scss/fontawesome.scss";
+@import '@fortawesome/fontawesome-free/scss/fontawesome.scss';
 
 // project specific CSS goes here
 
-@import "./components.scss";
+@layer base {
+  .form-field {
+    @apply tw-m-4 tw-w-full;
+  }
+}
 
-@import "./candidate_onboarding.scss";
+@layer components {
+  .rounded-step {
+    @apply tw-relative tw-z-10 tw-h-16 tw-w-16 tw-rounded-full tw-bg-gray-600 tw-text-white tw-shadow-md lg:tw-h-24 lg:tw-w-24 xl:tw-h-32 xl:tw-w-32 2xl:tw-h-40 2xl:tw-w-40;
+  }
+
+  .textinput {
+    @apply focus:tw-border-transparent focus:tw-bg-white focus:tw-text-gray-900 focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-blue-600;
+  }
+}
+
+@layer utilities {
+  .extend-form-label {
+    @apply tw-text-base tw-font-bold tw-text-gray-800;
+  }
+
+  .step-icon {
+    @apply tw-relative tw-top-1/4 tw-left-1/3 tw-inline-block tw-text-2xl xl:tw-text-4xl;
+  }
+
+  .step-text {
+    @apply tw-text-lg tw-font-semibold tw-text-gray-800 lg:tw-text-2xl xl:tw-text-3xl 2xl:tw-text-4xl;
+  }
+
+  .form--wrapper {
+    @apply tw-my-4 tw-rounded-md tw-border tw-border-solid tw-border-gray-300 tw-p-4 tw-shadow-md;
+  }
+}
+
+@import './candidate_onboarding.scss';
+
 ////////////////////////////////
 //Variables//
 ////////////////////////////////

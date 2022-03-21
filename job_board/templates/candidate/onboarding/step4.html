@@ -1,4 +1,11 @@
-<form novalidate id="skill-details" class="needs-validation form--wrapper step3">
+<form
+  method="POST"
+  action="/candidate/onboarding/skills"
+  novalidate
+  id="skill-details"
+  class="needs-validation form--wrapper step3"
+>
+  {% csrf_token %}
   <div
     data-skill-id="1"
     class="skill-details--wrapper tw-flex tw-w-full tw-justify-between"

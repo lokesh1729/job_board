@@ -10,7 +10,6 @@ let stepsMapping = {
   [STEP4]: "skill-details",
 };
 
-
 let stepsSequence = [STEP1, STEP2, STEP3, STEP4];
 
 let eventMap = [

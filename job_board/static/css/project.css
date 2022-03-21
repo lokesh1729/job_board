@@ -17183,27 +17183,43 @@ readers do not read off random characters that represent icons */
   width: auto;
 }
 
-.form-field {
-  @apply tw-m-4 tw-w-full;
+@layer base {
+  .form-field {
+    @apply tw-m-4 tw-w-full;
+  }
 }
+@layer components {
+  .rounded-step {
+    @apply tw-relative tw-z-10 tw-h-16 tw-w-16 tw-rounded-full tw-bg-gray-600 tw-text-white tw-shadow-md lg:tw-h-24 lg:tw-w-24 xl:tw-h-32 xl:tw-w-32 2xl:tw-h-40 2xl:tw-w-40;
+  }
 
-.extend-form-label {
-  @apply tw-font-bold tw-text-base tw-text-gray-800;
+  .textinput {
+    @apply focus:tw-border-transparent focus:tw-bg-white focus:tw-text-gray-900 focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-blue-600;
+  }
 }
+@layer utilities {
+  .extend-form-label {
+    @apply tw-text-base tw-font-bold tw-text-gray-800;
+  }
 
-.textinput {
-  @apply focus:tw-text-gray-900 focus:tw-bg-white focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-blue-600 focus:tw-border-transparent;
+  .step-icon {
+    @apply tw-relative tw-top-1/4 tw-left-1/3 tw-inline-block tw-text-2xl xl:tw-text-4xl;
+  }
+
+  .step-text {
+    @apply tw-text-lg tw-font-semibold tw-text-gray-800 lg:tw-text-2xl xl:tw-text-3xl 2xl:tw-text-4xl;
+  }
+
+  .form--wrapper {
+    @apply tw-my-4 tw-rounded-md tw-border tw-border-solid tw-border-gray-300 tw-p-4 tw-shadow-md;
+  }
 }
-
 .step-wrapper--element {
-  @apply tw-cursor-pointer tw-flex tw-flex-col tw-h-full tw-w-28 tw-justify-between tw-items-center;
-}
-.step-wrapper--element .rounded-step {
-  @apply tw-relative tw-shadow-md tw-w-24 tw-h-24 tw-rounded-full tw-bg-gray-600 tw-text-white tw-z-10;
+  @apply tw-flex tw-h-full tw-w-full tw-cursor-pointer tw-flex-col tw-items-center tw-justify-between;
 }
 .step-wrapper--element:not(:first-child) .rounded-step::before {
   content: "";
-  @apply tw-absolute tw-block tw-h-0.5 tw-w-70 tw-top-1/2 tw-right-full tw-bg-gray-600;
+  @apply tw-absolute tw-top-1/2 tw-right-full -tw-z-10 tw-block tw-h-0.5 tw-w-70 tw-bg-gray-600;
 }
 
 .activate-step > .rounded-step {
@@ -17211,18 +17227,6 @@ readers do not read off random characters that represent icons */
 }
 .activate-step > .rounded-step::before {
   @apply tw-bg-blue-600 !important;
-}
-
-.step-icon {
-  @apply tw-text-4xl tw-inline-block tw-relative tw-top-1/4 tw-left-1/3;
-}
-
-.step-text {
-  @apply tw-text-gray-800 tw-font-semibold tw-text-2xl;
-}
-
-.form--wrapper {
-  @apply tw-my-4 tw-border tw-border-solid tw-border-gray-300 tw-shadow-md tw-p-4 tw-rounded-md;
 }
 
 .alert-debug {

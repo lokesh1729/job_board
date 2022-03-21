@@ -1,10 +1,33 @@
 {% extends 'base.html' %} 
 {% block content %}
-<div class="tw-my-8 tw-mx-4">
-  <div class="tw-flex tw-flex-col tw-max-h-full tw-p-4">
+<div class="tw-mx-2 lg:tw-mx-4">
+  <div class="tw-flex tw-flex-col tw-max-h-full tw-p-2 lg:tw-p-4">
       {% include './step_header.html' %}
-      {% include './form.html' %}
-      {% include './form-navigation.html' %}
+      <div class="tw-mt-8">
+        {% include './step1.html' %}
+        {% include './step2.html' %}
+        {% include './step3.html' %}
+        {% include './step4.html' %}
+      </div>
+      <div class="tw-mt-4 lg:tw-mt-8 tw-flex tw-justify-end">
+        <button
+            autocomplete="off"
+            disabled="true"
+            id="prev-btn"
+            type="button"
+            class="btn btn-primary tw-text-center"
+        >
+        Previous
+        </button>
+        <button
+            autocomplete="off"
+            type="button"
+            id="next-btn"
+            class="btn btn-primary tw-text-center tw-ml-8 lg:tw-ml-16"
+        >
+        Next
+        </button>
+      </div>
   </div>
 </div>
 {% endblock %}
