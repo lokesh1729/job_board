@@ -1,0 +1,17 @@
+Candidate Onboarding V0
+
+	[✅] when the candidate visits the page, he needs to redirect to onboarding if it's not done
+
+	[] candidate onboarding - form completion and data insert
+
+	[] candidate onboarding - load the old state
+
+
+Candidate Onboarding V1
+
+	[] create data migration for companies, schools
+
+	[] add searchable select dropdown for companies, schools
+
+	[] add alert notification in case AJAX call is failed
+

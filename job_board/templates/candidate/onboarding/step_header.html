@@ -1,28 +1,12 @@
 <div id="step-header" class="tw-w-full tw-h-24 md:tw-h-28 lg:tw-h-32 xl:tw-h-40 2xl:tw-h-48">
   <div class="step-wrapper tw-flex tw-justify-between tw-w-full tw-h-full">
-    <div class="step-wrapper--element" data-link-to="education-details">
-      <div class="rounded-step">
-        <i class="fas fa-university step-icon"></i>
+    {% for element in step_header_mapping %}
+      <div class="step-wrapper--element" data-link-to="{{element.data_link_to}}">
+        <div class="rounded-step">
+          <i class="{{element.icon}}"></i>
+        </div>
+        <div class="step-text">{{element.name}}</div>
       </div>
-      <div class="step-text">education</div>
-    </div>
-    <div class="step-wrapper--element" data-link-to="work-details">
-      <div class="rounded-step">
-        <i class="fas fa-briefcase step-icon"></i>
-      </div>
-      <div class="step-text">work</div>
-    </div>
-    <div class="step-wrapper--element" data-link-to="project-details">
-      <div class="rounded-step">
-        <i class="fas fa-tasks step-icon"></i>
-      </div>
-      <div class="step-text">projects</div>
-    </div>
-    <div class="step-wrapper--element" data-link-to="skill-details">
-      <div class="rounded-step">
-        <i class="fas fa-tasks step-icon"></i>
-      </div>
-      <div class="step-text">skills</div>
-    </div>
+    {% endfor %}
   </div>
 </div>

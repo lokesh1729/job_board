@@ -1,16 +1,17 @@
 <form
   method="POST"
   action="/candidate/onboarding/skills"
+  name="{{step_header_mapping.3.name}}"
   novalidate
-  id="skill-details"
+  id="{{step_header_mapping.3.data_link_to}}"
   class="needs-validation form--wrapper step3"
 >
   {% csrf_token %}
   <div
     data-skill-id="1"
-    class="skill-details--wrapper tw-flex tw-w-full tw-justify-between"
+    class="tw-flex tw-w-full tw-justify-between"
   >
-    <div class="tw-flex tw-justify-between">
+    <div class="{{step_header_mapping.3.data_link_to}}--wrapper tw-flex tw-justify-between">
       <div class="form-field tw-grow tw-shrink tw-basis-1/2">
         <label for="skill-name__1" class="form-label extend-form-label"
           >Skill Name</label

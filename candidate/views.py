@@ -1,3 +1,5 @@
+import json
+
 from typing import Any
 from typing import Dict
 
@@ -20,6 +22,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import JsonResponse
 from job_board.users.constants import Role
 from job_board.utils.mixins import RolePermissionMixin
+from .constants import OnboardingSteps
 
 
 class CandidateSignupView(views.SignupView):
@@ -51,8 +54,12 @@ class CandidateOnboardingView(LoginRequiredMixin, RolePermissionMixin, TemplateV
     role = Role.CANDIDATE
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
-        kwargs["candidate"] = self.request.user.profile.candidate
-        return super().get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
+        return {
+            **context,
+            "candidate": self.request.user.profile.candidate,
+            "step_header_mapping": OnboardingSteps.STEP_HEADER_MAPPING,
+        }
 
 
 @user_passes_test(
@@ -63,12 +70,14 @@ class CandidateOnboardingView(LoginRequiredMixin, RolePermissionMixin, TemplateV
 @login_required
 def education_details(request):
     if request.is_ajax() and request.method == "POST":
-        data = request.POST.getlist("data[]")
-        form_type = request.POST.get("form_type")
+        req_body = json.loads(request.body)
+        data = req_body["data"]
+        form_type = req_body["form_type"]
         candidate = request.user.profile.candidate
         assert form_type is not None
         assert data is not None
-        if form_type == "education":
+        result = []
+        if form_type == OnboardingSteps.EDUCATION:
             objs = []
             for ele in data:
                 if "pk" not in ele:
@@ -82,8 +91,9 @@ def education_details(request):
                             to_date=ele["to-date"],
                         )
                     )
-            CandidateEducation.objects.bulk_create(objs)
-        elif form_type == "work":
+            for _obj in CandidateEducation.objects.bulk_create(objs):
+                result.append(_obj.pk)
+        elif form_type == OnboardingSteps.WORK:
             objs = []
             for ele in data:
                 if "pk" not in ele:
@@ -97,9 +107,9 @@ def education_details(request):
                             responsibilities=ele["responsibilities"],
                         )
                     )
-            CandidateExperience.objects.bulk_create(objs)
-        elif form_type == "projects":
-            objs = []
+            for _obj in CandidateExperience.objects.bulk_create(objs):
+                result.append(_obj.pk)
+        elif form_type == OnboardingSteps.PROJECTS:
             for ele in data:
                 if "pk" not in ele:
                     obj = CandidateProject.objects.create(
@@ -109,14 +119,15 @@ def education_details(request):
                     )
                     skills = []
                     for skill in ele["skills"].split(","):
-                        s_obj = Skill.objects.get_or_create(name=skill["skill_name"])
+                        s_obj, _ = Skill.objects.get_or_create(name=skill["skill_name"])
                         skills.append(s_obj)
                     obj.skills_used.set(skills)
-        elif form_type == "skills":
+                    result.append(obj.pk)
+        elif form_type == OnboardingSteps.SKILLS:
             objs = []
             for ele in data:
                 if "pk" not in ele:
-                    skill = Skill.objects.get_or_create(name=ele["skill_name"])
+                    skill, _ = Skill.objects.get_or_create(name=ele["skill_name"])
                     objs.append(
                         CandidateSkill(
                             candidate=candidate,
@@ -125,5 +136,6 @@ def education_details(request):
                             yoe=int(ele["skill_yoe"]),
                         )
                     )
-            CandidateSkill.objects.bulk_create(objs)
-        return JsonResponse({"result": "success"})
+            for _obj in CandidateSkill.objects.bulk_create(objs):
+                result.append(_obj.pk)
+        return JsonResponse({"result": result})
