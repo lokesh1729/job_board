@@ -1,0 +1,17 @@
+<form
+  method="POST"
+  action="/candidate/onboarding/education"
+  name="{{step_header_mapping.0.name}}"
+  novalidate
+  id="{{step_header_mapping.0.data_link_to}}"
+  class="form--wrapper step1 needs-validation"
+>
+  {% csrf_token %}
+  {% if education_details|length > 0 %}
+    {% for education_obj in education_details %}
+      {% include './step1.html' with index=education_obj.pk education_obj=education_obj step_header_mapping=step_header_mapping %}
+    {% endfor %}
+  {% else %}
+    {% include './step1.html' with index=1 step_header_mapping=step_header_mapping %}
+  {% endif %}
+</form>

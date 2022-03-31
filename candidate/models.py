@@ -22,6 +22,9 @@ class Candidate(BaseModel):
     onboarding_done = models.BooleanField(default=False)
     profile = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return "Candidate : %s : %s" % (self.profile.user.name, self.profile.user.email)
+
 
 class School(BaseModel):
     class Meta:

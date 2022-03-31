@@ -1,6 +1,6 @@
 <form
   method="POST"
-  action="/candidate/onboarding/skills"
+  action="/candidate/onboarding/skill"
   name="{{step_header_mapping.3.name}}"
   novalidate
   id="{{step_header_mapping.3.data_link_to}}"
@@ -14,7 +14,7 @@
     <div class="{{step_header_mapping.3.data_link_to}}--wrapper tw-flex tw-justify-between">
       <div class="form-field tw-grow tw-shrink tw-basis-1/2">
         <label for="skill-name__1" class="form-label extend-form-label"
-          >Skill Name</label
+          >Skill Name <span class="tw-text-red-500">*</span></label
         >
         <input
           required="true"
@@ -27,7 +27,7 @@
       </div>
       <div class="form-field tw-grow tw-shrink tw-basis-1/4">
         <label for="skill-proficiency__1" class="form-label extend-form-label"
-          >Proficiency</label
+          >Proficiency <span class="tw-text-red-500">*</span></label
         >
         <input
           required="true"
@@ -38,10 +38,13 @@
           max="10"
           class="form-control textinput"
         />
+        <small class="form-text text-muted">
+            Note that minimum is 1, maximum is 10
+        </small>
       </div>
       <div class="form-field tw-grow tw-shrink tw-basis-1/4">
         <label for="skill-yoe__1" class="form-label extend-form-label"
-          >YOE</label
+          >YOE <span class="tw-text-red-500">*</span></label
         >
         <input
           required="true"

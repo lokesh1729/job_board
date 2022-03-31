@@ -1,0 +1,13 @@
+{
+	"folders":
+	[
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"font_face": "FiraMono Nerd Font Mono",
+		"font_size": 16,
+		"python_virtualenv": "$project_path/venv"
+	}
+}

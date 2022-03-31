@@ -1,17 +1,33 @@
-Candidate Onboarding V0
+V0
 
-	[✅] when the candidate visits the page, he needs to redirect to onboarding if it's not done
+	Candidate Onboarding
 
-	[] candidate onboarding - form completion and data insert
+		[✅] when the candidate visits the page, he needs to redirect to onboarding if it's not done
 
-	[] candidate onboarding - load the old state
+		[✅] candidate onboarding - form completion and data insert
+
+		[✅] fix font awesome icon issue
+
+		[] fix the bug in clicking on next if the AJAX call is failed
+
+		[] candidate onboarding - load the old state
 
 
-Candidate Onboarding V1
+V1
 
-	[] create data migration for companies, schools
+	Candidate Onboarding
 
-	[] add searchable select dropdown for companies, schools
+		[] add invalid feedback help text for each form field
 
-	[] add alert notification in case AJAX call is failed
+		[] add alert notification in case AJAX call is failed
 
+		[] add spinner loading while AJAX call is in progress
+
+
+V2
+
+	Candidate Onboarding
+
+		[] create data migration for companies, schools
+
+		[] add searchable select dropdown for companies, schools

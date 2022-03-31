@@ -1,14 +1,34 @@
-import {eventMap} from "./form_state.js";
-
+let eventMap = [
+  {
+    addBtnClass: '.add-education',
+    dataAttrName: 'data-edu-id',
+    removeBtnClass: '.remove-education'
+  },
+  {
+    addBtnClass: '.add-work',
+    dataAttrName: 'data-work-id',
+    removeBtnClass: '.remove-work'
+  },
+  {
+    addBtnClass: '.add-project',
+    dataAttrName: 'data-project-id',
+    removeBtnClass: '.remove-project'
+  },
+  {
+    addBtnClass: '.add-skill',
+    dataAttrName: 'data-skill-id',
+    removeBtnClass: '.remove-skill'
+  }
+];
 
 const updateFormElementIds = (formElement, idx) => {
-  for (const currElement of formElement.find(".form-field").toArray()) {
+  for (const currElement of formElement.find('.form-field').toArray()) {
     const labelEle = currElement.children[0];
     const inputEle = currElement.children[1];
-    const forVal = labelEle.getAttribute("for").split("__");
-    labelEle.setAttribute("for", `${forVal[0]}__${idx}`);
-    const idVal = inputEle.getAttribute("id").split("__");
-    inputEle.setAttribute("id", `${idVal[0]}__${idx}`);
+    const forVal = labelEle.getAttribute('for').split('__');
+    labelEle.setAttribute('for', `${forVal[0]}__${idx}`);
+    const idVal = inputEle.getAttribute('id').split('__');
+    inputEle.setAttribute('id', `${idVal[0]}__${idx}`);
   }
 };
 
@@ -26,8 +46,8 @@ const handleAddElement = (element, dataAttrName, removeBtnClass) => {
   }
   $(clonedEle).insertAfter(wrapperElement);
   // enable remove element for current and next element
-  $(wrapperElement).find(removeBtnClass).removeAttr("disabled");
-  $(clonedEle).find(removeBtnClass).removeAttr("disabled");
+  $(wrapperElement).find(removeBtnClass).removeAttr('disabled');
+  $(clonedEle).find(removeBtnClass).removeAttr('disabled');
 };
 
 const handleRemoveElement = (element, dataAttrName, removeBtnClass) => {
@@ -42,20 +62,20 @@ const handleRemoveElement = (element, dataAttrName, removeBtnClass) => {
   }
   if (nextSibblings.length + prevSibblings.length === 1) {
     for (const currSibbling of nextSibblings) {
-      $(currSibbling).find(removeBtnClass).attr("disabled", true);
+      $(currSibbling).find(removeBtnClass).attr('disabled', true);
     }
     for (const currSibbling of prevSibblings) {
-      $(currSibbling).find(removeBtnClass).attr("disabled", true);
+      $(currSibbling).find(removeBtnClass).attr('disabled', true);
     }
   }
 };
 
 eventMap.forEach((item) => {
-  $(item.addBtnClass).on("click", (event) => {
+  $(item.addBtnClass).on('click', (event) => {
     const element = $(event.target);
     handleAddElement(element, item.dataAttrName, item.removeBtnClass);
   });
-  $(item.removeBtnClass).on("click", (event) => {
+  $(item.removeBtnClass).on('click', (event) => {
     const element = $(event.target);
     handleRemoveElement(element, item.dataAttrName, item.removeBtnClass);
   });

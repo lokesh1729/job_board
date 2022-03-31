@@ -1,6 +1,6 @@
 <form
   method="POST"
-  action="/candidate/onboarding/projects"
+  action="/candidate/onboarding/project"
   name="{{step_header_mapping.2.name}}"
   novalidate
   id="{{step_header_mapping.2.data_link_to}}"
@@ -17,7 +17,7 @@
       <div class="tw-flex tw-justify-center tw-w-full">
         <div class="form-field">
           <label for="project-name__1" class="form-label extend-form-label"
-            >Project Name</label
+            >Project Name <span class="tw-text-red-500">*</span></label
           >
           <input
             required="true"
@@ -34,7 +34,7 @@
           <label
             for="project-description__1"
             class="form-label extend-form-label"
-            >Project Description</label
+            >Project Description <span class="tw-text-red-500">*</span></label
           >
           <textarea
             required="true"
@@ -49,7 +49,7 @@
       <div class="tw-flex tw-justify-between tw-w-full">
         <div class="form-field">
           <label for="project-skills__1" class="form-label extend-form-label"
-            >Skills Used</label
+            >Skills Used <span class="tw-text-red-500">*</span></label
           >
           <input
             required="true"
@@ -59,6 +59,10 @@
             class="form-control textinput"
             placeholder="Enter project skills used"
           />
+          <!-- TODO : add id and aria-describedBy for accessibility. Refer bootstrap docs -->
+          <small class="form-text text-muted">
+            Add comma separated skills. For example : python, django, html
+          </small>
         </div>
       </div>
     </div>
