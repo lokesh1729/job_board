@@ -1,32 +1,50 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
 {% block content %}
 <div class="tw-mx-2 lg:tw-mx-4">
   <div class="tw-flex tw-flex-col tw-max-h-full tw-p-2 lg:tw-p-4">
       {% include './step_header.html' %}
       <div class="tw-mt-8">
-        {% include './step1/index.html' %}
-        {% include './step2.html' %}
-        {% include './step3.html' %}
-        {% include './step4.html' %}
-      </div>
-      <div class="tw-mt-4 lg:tw-mt-8 tw-flex tw-justify-end">
-        <button
-            autocomplete="off"
-            disabled="true"
-            id="prev-btn"
-            type="button"
-            class="btn btn-primary tw-text-center"
-        >
-        Previous
-        </button>
-        <button
-            autocomplete="off"
-            type="button"
-            id="next-btn"
-            class="btn btn-primary tw-text-center tw-ml-8 lg:tw-ml-16"
-        >
-        Next
-        </button>
+        {% for form in form_data %}
+          <div class="tw-flex tw-flex-col tw-content-between">
+            <form
+              data-step-number="{{forloop.counter}}"
+              method="POST"
+              action="{{form.action}}"
+              name="{{form.name}}"
+              novalidate
+              id="{{form.data_link_to}}"
+              class="form--wrapper needs-validation"
+            >
+              {% csrf_token %}
+              {% if form.context_data|length > 0 %}
+                {% for obj in form.context_data %}
+                  {% include './step.html' with index=forloop.counter obj=obj form=form %}
+                {% endfor %}
+              {% else %}
+                {% include './step.html' with index=1 obj=None form=form %}
+              {% endif %}
+            </form>
+            <div class="tw-mt-4 lg:tw-mt-8 tw-flex tw-justify-end">
+                <button
+                    data-step-number="{{forloop.counter}}"
+                    autocomplete="off"
+                    disabled
+                    type="button"
+                    class="prev-btn btn btn-primary tw-text-center"
+                >
+                Previous
+                </button>
+                <button
+                    data-step-number="{{forloop.counter}}"
+                    autocomplete="off"
+                    type="button"
+                    class="next-btn btn btn-primary tw-text-center tw-ml-8 lg:tw-ml-16"
+                >
+                Next
+                </button>
+            </div>
+        </div>
+        {% endfor %}
       </div>
   </div>
 </div>

@@ -1,3 +1,4 @@
+import copy
 import json
 import logging
 
@@ -13,7 +14,6 @@ from django.db.models import F
 
 from candidate.forms import CandidateSignupForm
 from candidate.models import (
-    Candidate,
     CandidateEducation,
     CandidateSkill,
     CandidateProject,
@@ -27,6 +27,7 @@ from django.http import JsonResponse, HttpResponseBadRequest
 from job_board.users.constants import Role
 from job_board.utils.mixins import RolePermissionMixin
 from .constants import OnboardingSteps
+from .utils import sanitize_data
 
 logger = logging.getLogger(__name__)
 
@@ -63,20 +64,53 @@ class CandidateOnboardingView(LoginRequiredMixin, RolePermissionMixin, TemplateV
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
         candidate = self.request.user.profile.candidate
-        # import ipdb
-
-        # ipdb.set_trace()
+        projects = CandidateProject.objects.raw(
+            """
+            SELECT ARRAY_AGG("skills") as skills, id, name, description
+                FROM (
+                        SELECT "candidate_candidateproject"."id",
+                            "candidate_candidateproject"."name",
+                            "candidate_candidateproject"."description",
+                            "candidate_skill"."name" AS "skills"
+                            FROM "candidate_candidateproject"
+                            LEFT OUTER JOIN "candidate_candidateproject_skills_used"
+                            ON ("candidate_candidateproject"."id" = "candidate_candidateproject_skills_used"."candidateproject_id")
+                            LEFT OUTER JOIN "candidate_skill"
+                            ON ("candidate_candidateproject_skills_used"."skill_id" = "candidate_skill"."id")
+                        WHERE "candidate_candidateproject"."candidate_id" = %s
+                ) as tbl1 GROUP BY id, name, description;
+            """
+            % candidate.pk
+        )
+        form_data = copy.deepcopy(OnboardingSteps.STEPS_MAPPING)
+        form_data[0]["context_data"] = candidate.candidate_educations.values(
+            "pk", "degree", "from_date", "to_date", school_name=F("school__name")
+        )
+        form_data[1]["context_data"] = candidate.candidate_experiences.values(
+            "pk", "company", "role", "responsibilities", "from_date", "to_date"
+        )
+        form_data[2]["context_data"] = list(
+            map(
+                lambda project: {
+                    "id": project.id,
+                    "name": project.name,
+                    "description": project.description,
+                    "skills": ", ".join(project.skills),
+                },
+                projects,
+            )
+        )
+        form_data[3]["context_data"] = candidate.candidate_skills.values(
+            "pk",
+            proficiency=F("skill__proficiency"),
+            yoe=F("skill__yoe"),
+            name=F("skill__name"),
+        )
         return {
             **context,
             "candidate": candidate,
             "step_header_mapping": OnboardingSteps.STEP_HEADER_MAPPING,
-            "education_details": candidate.candidate_educations.values(
-                "pk", "degree", "from_date", "to_date", school_name=F("school__name")
-            ),
-            # "education_details": candidate.candidate_educations.values("pk", "school__name", "degree", "from_date", "to_date"),
-            # "project_details": candidate.candidate_projects.values("pk", ''),
-            # "work_details":,
-            # "skill_details":,
+            "form_data": form_data,
         }
 
 
@@ -93,6 +127,7 @@ def education_details(request):
         logger.info("got req_body %s for candidate %s", req_body, candidate)
         data = req_body["data"]
         assert data is not None
+        data = sanitize_data(data)
         result = []
         for ele in data:
             school, _ = School.objects.get_or_create(name=ele["edu-school"])
@@ -133,6 +168,7 @@ def work_details(request):
         logger.info("got req_body %s for candidate %s", req_body, candidate)
         data = req_body["data"]
         assert data is not None
+        data = sanitize_data(data)
         result = []
         for ele in data:
             if "pk" not in ele:
@@ -174,10 +210,12 @@ def project_details(request):
         logger.info("got req_body %s for candidate %s", req_body, candidate)
         data = req_body["data"]
         assert data is not None
+        data = sanitize_data(data)
         result = []
         for ele in data:
             skills = []
             for skill in ele["project-skills"].split(","):
+                skill = skill.strip()
                 s_obj, _ = Skill.objects.get_or_create(name=skill)
                 skills.append(s_obj)
             if "pk" not in ele:
@@ -189,7 +227,7 @@ def project_details(request):
                 obj.skills_used.set(skills)
                 result.append(obj.pk)
             else:
-                obj = CandidateProject.objects.get(ele["pk"])
+                obj = CandidateProject.objects.get(pk=ele["pk"])
                 obj.name = ele["project-name"]
                 obj.description = ele["project-description"]
                 obj.skills_used.set(skills)
@@ -214,24 +252,22 @@ def skill_details(request):
         logger.info("got req_body %s for candidate %s", req_body, candidate)
         data = req_body["data"]
         assert data is not None
+        data = sanitize_data(data)
         result = []
         for ele in data:
-            skill, _ = Skill.objects.get_or_create(name=ele["skill-name"])
+            skill, _ = Skill.objects.update_or_create(
+                name=ele["skill-name"],
+                defaults={
+                    "proficiency": int(ele["skill-proficiency"]),
+                    "yoe": int(ele["skill-yoe"]),
+                },
+            )
             if "pk" not in ele:
                 result.append(
-                    CandidateSkill.objects.create(
-                        candidate=candidate,
-                        skill=skill,
-                        proficiency=int(ele["skill-proficiency"]),
-                        yoe=int(ele["skill-yoe"]),
-                    ).pk
+                    CandidateSkill.objects.create(candidate=candidate, skill=skill).pk
                 )
             else:
-                CandidateSkill.objects.filter(pk=ele["pk"]).update(
-                    skill=skill,
-                    proficiency=int(ele["skill-proficiency"]),
-                    yoe=int(ele["skill-yoe"]),
-                )
+                CandidateSkill.objects.filter(pk=ele["pk"]).update(skill=skill)
                 result.append(ele["pk"])
         candidate.onboarding_done = True
         candidate.save()

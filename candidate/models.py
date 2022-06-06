@@ -77,13 +77,6 @@ class Skill(BaseModel):
     class Meta:
         abstract = False
 
-    name = models.CharField(_("Skill Name"), max_length=100)
-
-
-class CandidateSkill(BaseModel):
-    class Meta:
-        abstract = False
-
     PROFICIENCY_CHOICES = (
         (1, Proficiency.ONE),
         (2, Proficiency.TWO),
@@ -97,6 +90,17 @@ class CandidateSkill(BaseModel):
         (10, Proficiency.TEN),
     )
 
+    name = models.CharField(_("Skill Name"), max_length=100)
+    proficiency = models.IntegerField(
+        _("Proficiency"), choices=PROFICIENCY_CHOICES, null=True
+    )
+    yoe = models.IntegerField(_("Years of Experience"), null=True)
+
+
+class CandidateSkill(BaseModel):
+    class Meta:
+        abstract = False
+
     candidate = models.ForeignKey(
         Candidate,
         on_delete=models.CASCADE,
@@ -109,8 +113,6 @@ class CandidateSkill(BaseModel):
         related_name="candidate_skills",
         related_query_name="candidate_skill",
     )
-    proficiency = models.IntegerField(_("Proficiency"), choices=PROFICIENCY_CHOICES)
-    yoe = models.IntegerField(_("Years of Experience"))
 
 
 class CandidateProject(BaseModel):
