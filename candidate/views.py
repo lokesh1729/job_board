@@ -92,7 +92,7 @@ class CandidateOnboardingView(LoginRequiredMixin, RolePermissionMixin, TemplateV
         form_data[2]["context_data"] = list(
             map(
                 lambda project: {
-                    "id": project.id,
+                    "pk": project.id,
                     "name": project.name,
                     "description": project.description,
                     "skills": ", ".join(project.skills),
@@ -124,7 +124,7 @@ def education_details(request):
     if request.is_ajax() and request.method == "POST":
         req_body = json.loads(request.body)
         candidate = request.user.profile.candidate
-        logger.info("got req_body %s for candidate %s", req_body, candidate)
+        logger.info("education_details : got req_body %s for candidate %s", req_body, candidate)
         data = req_body["data"]
         assert data is not None
         data = sanitize_data(data)
@@ -165,7 +165,7 @@ def work_details(request):
     if request.is_ajax() and request.method == "POST":
         req_body = json.loads(request.body)
         candidate = request.user.profile.candidate
-        logger.info("got req_body %s for candidate %s", req_body, candidate)
+        logger.info("work_details : got req_body %s for candidate %s", req_body, candidate)
         data = req_body["data"]
         assert data is not None
         data = sanitize_data(data)
@@ -207,7 +207,7 @@ def project_details(request):
     if request.is_ajax() and request.method == "POST":
         req_body = json.loads(request.body)
         candidate = request.user.profile.candidate
-        logger.info("got req_body %s for candidate %s", req_body, candidate)
+        logger.info("project_details : got req_body %s for candidate %s", req_body, candidate)
         data = req_body["data"]
         assert data is not None
         data = sanitize_data(data)
@@ -249,7 +249,7 @@ def skill_details(request):
     if request.is_ajax() and request.method == "POST":
         req_body = json.loads(request.body)
         candidate = request.user.profile.candidate
-        logger.info("got req_body %s for candidate %s", req_body, candidate)
+        logger.info("skill_details : got req_body %s for candidate %s", req_body, candidate)
         data = req_body["data"]
         assert data is not None
         data = sanitize_data(data)

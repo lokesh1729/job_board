@@ -22,11 +22,11 @@ V0
 
 	- [✅] a common function to strip the strings coming from frontend
 
-	- [] remove buttons not activated on the old state load
+	- [✅] remove buttons not activated on the old state load
 
 	- [] spaces coming in textarea
 
-	- [] update documentation
+	- [✅] update documentation
 
 	- [✅] ajax calls happening two times
 
@@ -49,3 +49,4 @@ V2
 - Candidate Onboarding
 
 	- [] create data migration for companies, schools
+	- [] make it mobile friendly

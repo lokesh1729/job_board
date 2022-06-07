@@ -1,13 +1,9 @@
-/*
-* This file contains event handlers for "Add" / "Remove" form elements
-*/
-import { eventMap } from "./constants";
-
 /** This function updates id and for attributes of form elements
  * 
  *  1. Each form element has ".form-field" class, so iterate over it.
  *  2. Find the label element and input element.
- *  3. "for" and "id" are joined by "__". so do the thing.
+ *  3. "for" and "id" are joined by "--". so, split it and join it back
+ *       with the new sequence.
  * 
 **/
 
@@ -36,7 +32,7 @@ const updateFormElementIds = (formElement, idx) => {
  *     parent wrapper element's sequence + 1
  * 4. Also, for the elements below the parent element, update their sequences
  *     because they are changed now. ** Think of it like updating an array from
- *     the current position to end of it. **
+ *     the current position to the end of it. **
  * 5. Enable the remove buttons of both parent and cloned element
  * 
  * 
@@ -55,6 +51,7 @@ const handleAddElement = (element, dataAttrVal, removeBtnClass) => {
   clonedEle.insertAfter(parentWrapper);
   parentWrapper.find(removeBtnClass).removeAttr('disabled');
   clonedEle.find(removeBtnClass).removeAttr('disabled');
+  clonedEle.find("input[type='hidden']").remove();
 };
 
 /** This function is an event handler for "Delete <form type>" for the form
@@ -63,7 +60,7 @@ const handleAddElement = (element, dataAttrVal, removeBtnClass) => {
  *       sequence and seq+1 and so on...
  *  2. Delete the current wrapper element
  *  3. If there is only one element remaining i.e. prevSibblings + nextSibblings
- *       == 1, then disable their remove button class
+ *       == 1, then disable their remove button.
 **/
 
 const handleRemoveElement = (element, dataAttrVal, removeBtnClass) => {
@@ -72,6 +69,11 @@ const handleRemoveElement = (element, dataAttrVal, removeBtnClass) => {
   let seq = parseInt(parentWrapper.attr(dataAttrName).split("--")[1]);
   const nextSibblings = parentWrapper.nextAll('div[data-group]').toArray();
   const prevSibblings = parentWrapper.prevAll('div[data-group]').toArray();
+  if (nextSibblings.length + prevSibblings.length == 0) {
+    alert("unable to remove the element as there is only one left");
+    $(element).attr('disabled', true);
+    return;
+  }
   parentWrapper.remove();
   for (const currSibbling of nextSibblings) {
     updateFormElementIds($(currSibbling), seq);
@@ -87,11 +89,4 @@ const handleRemoveElement = (element, dataAttrVal, removeBtnClass) => {
   }
 };
 
-eventMap.forEach((item) => {
-  $(item.addBtnClass).on('click', (event) => {
-    handleAddElement(event.target, item.dataAttrVal, item.removeBtnClass);
-  });
-  $(item.removeBtnClass).on('click', (event) => {
-    handleRemoveElement(event.target, item.dataAttrVal, item.removeBtnClass);
-  });
-});
+export { handleAddElement, handleRemoveElement };

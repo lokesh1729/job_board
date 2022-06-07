@@ -12,7 +12,7 @@ import { stepsMapping, stepsSequence, STEP1, STEP4 } from "./constants";
  *
  * Refer `docs/candidate_onboarding.md` for the context
  *
- * 1. Activate the step in the step header.
+ * 1. Activate the step in the step header by adding activate-step class.
  * 2. Activate the current step in the step form.
  *      a. Hide all the steps less than the given `number`
  *      b. Hide all the steps greater than the given `number` and
@@ -65,6 +65,20 @@ function activateCurrStep(number) {
       $(nextBtn).text('Next');
     }
 }
+
+/*
+* When a next button is clicked, we should take the user
+* to the next step but before that we need to validate the form.
+*
+* 1. validate the current form. `event.target` is the form element
+*    because the event handler is running on the submit of form.
+* 2. Loop through all form wrapper elements and get the values of input
+*     elements and push it to `data` array.
+* 3. make an AJAX call to save the data.
+* 4. The result of the API would be an array of the objects contains
+*     "pk" of an object. Put them inside the wrapper element as hidden element.
+*
+*/
 
 function formHandler (event) {
   event.preventDefault();
@@ -123,61 +137,4 @@ function formHandler (event) {
   });
 }
 
-for (let key in stepsMapping) {
-    $(`#${stepsMapping[key]}`).on('submit', formHandler);
-}
-/**
-* When a next button is clicked, we should take the user
-* to the next step but before that we need to validate
-*
-*
-* It first validates the current step, make an AJAX call to save
-* the current state, then moves to the next step.
-*
-* 1. `event.target` is the form element here because the event handler is
-*     running on the submit of form.
-* 2. Loop through all form wrapper elements and get the values of input
-*     elements and push it to `data` array.
-* 3. The result of the API would be an array of the objects contains
-*     "pk" of an object. Put them inside the wrapper element as hidden element.
-*
-**/
-$('.next-btn').on('click', function (event) {
-  event.stopPropagation();
-  let currStep = parseInt(event.target.getAttribute("data-step-number"));
-  console.log("currStep in next button is " + currStep);
-  try {
-    const currForm = stepsMapping[currStep];
-    if (!currForm) {
-      console.error("invalid currStep");
-      return;
-    }
-    $(`#${currForm}`).submit();
-    setTimeout(() => {
-      if (currStep === STEP4) {
-        window.location.href = '/candidate/dashboard';
-      } else {
-        activateCurrStep(currStep + 1);
-      }
-    }, 500);
-  } catch (err) {
-    console.error('error in clicking next button', err);
-  }
-});
-
-/**
-* When a previous button is clicked, there is no need of
-* validating the current step. Why ?
-*
-* User may not filled the current step completely but he may want to
-* go to the previous step to verify some of the information.
-**/
-
-$('.prev-btn').on('click', function (event) {
-  event.stopPropagation();
-  let currStep = parseInt(event.target.getAttribute("data-step-number"));
-  console.log("currStep in previous button is " + currStep);
-  activateCurrStep(currStep - 1);
-});
-
-activateCurrStep(STEP1);
+export { formHandler, activateCurrStep };

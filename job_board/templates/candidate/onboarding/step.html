@@ -3,7 +3,7 @@
     class="{{form.data_link_to}}--wrapper tw-h-84 tw-flex tw-flex-col tw-justify-between"
   >
     {% for row in form.rows %}
-      <div class="tw-flex tw-w-full tw-justify-between">
+      <div class="form-row tw-flex tw-w-full tw-justify-between">
         {% for element in row %}
           {% if element.input_type == "text" %}
             {% include 'components/text_input.html' with label=element.label_text id=element.input_name|concat_hyphen:index required=element.required name=element.input_name placeholder=element.placeholder  value=element.value_attribute|get_value:obj extra_classes=element.extra_classes %}
@@ -18,7 +18,7 @@
       </div>
     {% endfor %}
     {% if obj is not None %}
-      <input type="hidden" name="pk" value="{{index}}"/>
+      <input type="hidden" name="pk" value="{{obj.pk}}"/>
     {% endif %}
   </div>
   <div class="tw-my-8 tw-mr-16 tw-flex tw-justify-end">
@@ -27,7 +27,7 @@
     </button>
     <button
       autocomplete="off"
-      {% if education_obj is None %}
+      {% if obj is None %}
         disabled="true"
       {% endif %}
       type="button"
