@@ -24,8 +24,6 @@ V0
 
 	- [✅] remove buttons not activated on the old state load
 
-	- [] spaces coming in textarea
-
 	- [✅] update documentation
 
 	- [✅] ajax calls happening two times
@@ -36,6 +34,8 @@ V0
 V1
 
 - Candidate Onboarding
+
+	- [] spaces coming in textarea
 
     - [] add invalid feedback help text for each form field
 
