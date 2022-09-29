@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block content %}
+<div class="tw-flex tw-justify-around tw-items-center tw-w-full tw-h-full tw-my-24 md:tw-my-32 lg:tw-my-40 xl:tw-my-48">
+        <a id="employer-sign-up-link" class="link-primary tw-text-lg md:tw-text-xl lg:tw-text-2xl" href="{% url 'employer:signup' %}">{% translate "Want to post jobs? Signup as an employer" %}</a>
+        <a id="candidate-sign-up-link" class="link-primary tw-text-lg md:tw-text-xl lg:tw-text-2xl" href="{% url 'candidate:signup' %}">{% translate "Looking for a job? Signup as a candidate" %}</a>
+</div>
+{% endblock content %}

@@ -1,68 +1,87 @@
 {% load user_filters static i18n %}
 <nav class="navbar navbar-expand-md navbar-light bg-light">
   <div class="container-fluid">
-    <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+    <button class="navbar-toggler navbar-toggler-right"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
             aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
+      <ul class="navbar-nav mr-auto tw-w-full">
         {% if request.user.is_authenticated and request.user.is_staff is False %}
           {% with is_candidate=request.user|is_candidate %}
-          {% with is_employer=request.user|is_employer %}
-            {% if is_candidate %}
-              <li class="nav-item active">
-                <a class="nav-link" href="{% url 'candidate:dashboard' %}">Dashboard <span
-                  class="visually-hidden">(current)</span></a>
-              </li>
-              <li class="nav-item">
-                {# TODO : add link here #}
-                <a class="nav-link" href="#">Browse Jobs</a>
-              </li>
-              <li class="nav-item">
-                {# TODO : add link here #}
-                <a class="nav-link" href="#">Messages</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'users:detail' request.user.username  %}">{% translate "My Profile" %}</a>
-              </li>
-            {% elif is_employer %}
-              <li class="nav-item active">
-                <a class="nav-link" href="{% url 'candidate:dashboard' %}">Dashboard <span
-                  class="visually-hidden">(current)</span></a>
-              </li>
-              <li class="nav-item">
-                {# TODO : add link here #}
-                <a class="nav-link" href="#">Browse Candidates</a>
-              </li>
-              <li class="nav-item">
-                {# TODO : add link here #}
-                <a class="nav-link" href="#">Messages</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'users:detail' request.user.username  %}">{% translate "My Profile" %}</a>
-              </li>
-            {% endif %}
+            {% with is_employer=request.user|is_employer %}
+              {% if is_candidate %}
+                <div class="tw-flex tw-justify-between tw-items-center tw-w-full">
+                  <div class="tw-mx-4 md:tw-mx-6 lg:tw-mx-12 xl:tw-mx-18 tw-flex tw-justify-between">
+                    <li class="nav-item active">
+                      <a class="nav-link" href="{% url 'candidate:dashboard' %}">Dashboard <span class="visually-hidden">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                      {# TODO : add link here #}
+                      <a class="nav-link" href="#">Browse Jobs</a>
+                    </li>
+                  </div>
+                  <div class="tw-mx-4 md:tw-mx-6 lg:tw-mx-12 xl:tw-mx-18 tw-flex tw-justify-between">
+                    <li class="nav-item">
+                      {# TODO : add link here #}
+                      <a class="nav-link" href="#">Messages</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link"
+                         href="{% url 'users:detail' request.user.username  %}">{{request.user.username}}</a>
+                    </li>
+                  </div>
+                </div>
+              {% elif is_employer %}
+                <div class="tw-flex tw-justify-between tw-items-center tw-w-full">
+                  <div class="tw-mx-4 md:tw-mx-6 lg:tw-mx-12 xl:tw-mx-18 tw-flex tw-justify-between">
+                    <li class="nav-item active">
+                      <a class="nav-link" href="{% url 'candidate:dashboard' %}">Dashboard <span class="visually-hidden">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                      {# TODO : add link here #}
+                      <a class="nav-link" href="#">Browse Candidates</a>
+                    </li>
+                  </div>
+                  <div class="tw-mx-4 md:tw-mx-6 lg:tw-mx-12 xl:tw-mx-18 tw-flex tw-justify-between">
+                    <li class="nav-item">
+                      {# TODO : add link here #}
+                      <a class="nav-link" href="#">Messages</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link"
+                         href="{% url 'users:detail' request.user.username  %}">{% translate "My Profile" %}</a>
+                    </li>
+                  </div>
+                </div>
+              {% endif %}
             {% endwith %}
-            {% endwith %}
+          {% endwith %}
         {% else %}
-          <li class="nav-item active">
-            <a class="nav-link" href="{% url 'home' %}">Home <span class="visually-hidden">(current)</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'about' %}">About</a>
-          </li>
-          <li class="nav-item">
-            <a id="candidate-sign-up-link" class="nav-link" href="{% url 'candidate:signup' %}">{% translate "Candidate Sign Up" %}</a>
-          </li>
-          <li class="nav-item">
-            <a id="employer-sign-up-link" class="nav-link" href="{% url 'employer:signup' %}">{% translate "Employer Sign Up" %}</a>
-          </li>
-          <li class="nav-item">
-            {# URL provided by django-allauth/account/urls.py #}
-            <a id="log-in-link" class="nav-link" href="{% url 'account_login' %}">{% translate "Sign In" %}</a>
-          </li>
+          <div class="tw-flex tw-justify-between tw-items-center tw-w-full">
+            <div class="tw-mx-4 md:tw-mx-6 lg:tw-mx-12 xl:tw-mx-18 tw-flex tw-justify-between">
+              <li class="nav-item active">
+                <a class="nav-link" href="{% url 'home' %}">Home <span class="visually-hidden">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'about' %}">About</a>
+              </li>
+            </div>
+            <div class="tw-mx-4 md:tw-mx-6 lg:tw-mx-12 xl:tw-mx-18 tw-flex tw-justify-between">
+              <li class="nav-item">
+                <a id="sign-up-link" class="nav-link" href="{% url 'users:signup' %}">{% translate "Sign Up" %}</a>
+              </li>
+              <li class="nav-item">
+                {# URL provided by django-allauth/account/urls.py #}
+                <a id="log-in-link" class="nav-link" href="{% url 'account_login' %}">{% translate "Sign In" %}</a>
+              </li>
+            </div>
+          </div>
         {% endif %}
       </ul>
     </div>
