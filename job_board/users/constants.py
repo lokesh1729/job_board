@@ -5,6 +5,6 @@ from enum import Enum
 
 
 class Role(Enum):
-    EMPLOYER = "employer"
+    RECRUITER = "recruiter"
     CANDIDATE = "candidate"
     ADMIN = "admin"

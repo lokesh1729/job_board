@@ -11,5 +11,5 @@ def is_candidate(user):
 
 
 @register.filter
-def is_employer(user):
-    return user is not None and user.role is not None and user.role == Role.EMPLOYER
+def is_recruiter(user):
+    return user is not None and user.role is not None and user.role == Role.RECRUITER

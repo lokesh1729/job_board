@@ -43,6 +43,10 @@ V1
 
     - [] add spinner loading while AJAX call is in progress
 
+- Job Posting Flow
+	
+	- [] 
+
 
 V2
 

@@ -37,7 +37,7 @@ class User(AbstractUser):
 class UserProfile(Model):
     ROLE_CHOICES = (
         (constants.Role.CANDIDATE.name, constants.Role.CANDIDATE.value),
-        (constants.Role.EMPLOYER.name, constants.Role.EMPLOYER.value),
+        (constants.Role.RECRUITER.name, constants.Role.RECRUITER.value),
         (constants.Role.ADMIN.name, constants.Role.ADMIN.value)
     )
     user = OneToOneField(

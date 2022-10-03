@@ -25,7 +25,7 @@ from candidate.models import (
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import JsonResponse, HttpResponseBadRequest
 from job_board.users.constants import Role
-from job_board.utils.mixins import RolePermissionMixin
+from common.mixins import RolePermissionMixin
 from .constants import OnboardingSteps
 from .utils import sanitize_data
 
@@ -76,7 +76,7 @@ class CandidateOnboardingView(LoginRequiredMixin, RolePermissionMixin, TemplateV
                             LEFT OUTER JOIN "candidate_candidateproject_skills_used"
                             ON ("candidate_candidateproject"."id" = "candidate_candidateproject_skills_used"."candidateproject_id")
                             LEFT OUTER JOIN "candidate_skill"
-                            ON ("candidate_candidateproject_skills_used"."skill_id" = "candidate_skill"."id")
+                            ON ("candidate_candidateproject_skills_used"."skill_id" = "candidate_skill"."name")
                         WHERE "candidate_candidateproject"."candidate_id" = %s
                 ) as tbl1 GROUP BY id, name, description;
             """

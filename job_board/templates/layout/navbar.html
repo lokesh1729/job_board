@@ -14,7 +14,7 @@
       <ul class="navbar-nav mr-auto tw-w-full">
         {% if request.user.is_authenticated and request.user.is_staff is False %}
           {% with is_candidate=request.user|is_candidate %}
-            {% with is_employer=request.user|is_employer %}
+            {% with is_recruiter=request.user|is_recruiter %}
               {% if is_candidate %}
                 <div class="tw-flex tw-justify-between tw-items-center tw-w-full">
                   <div class="tw-mx-4 md:tw-mx-6 lg:tw-mx-12 xl:tw-mx-18 tw-flex tw-justify-between">
@@ -37,11 +37,11 @@
                     </li>
                   </div>
                 </div>
-              {% elif is_employer %}
+              {% elif is_recruiter %}
                 <div class="tw-flex tw-justify-between tw-items-center tw-w-full">
                   <div class="tw-mx-4 md:tw-mx-6 lg:tw-mx-12 xl:tw-mx-18 tw-flex tw-justify-between">
                     <li class="nav-item active">
-                      <a class="nav-link" href="{% url 'candidate:dashboard' %}">Dashboard <span class="visually-hidden">(current)</span></a>
+                      <a class="nav-link" href="{% url 'recruiter:dashboard' %}">Dashboard <span class="visually-hidden">(current)</span></a>
                     </li>
                     <li class="nav-item">
                       {# TODO : add link here #}
