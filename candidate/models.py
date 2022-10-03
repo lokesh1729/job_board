@@ -4,14 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from job_board.users.models import UserProfile
 
 from .constants import Proficiency
-
-
-class BaseModel(models.Model):
-    class Meta:
-        abstract = True
-
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
+from common.models import BaseModel
 
 
 class Candidate(BaseModel):
@@ -90,11 +83,14 @@ class Skill(BaseModel):
         (10, Proficiency.TEN),
     )
 
-    name = models.CharField(_("Skill Name"), max_length=100)
+    name = models.SlugField(_("Skill Name"), max_length=25, primary_key=True)
     proficiency = models.IntegerField(
         _("Proficiency"), choices=PROFICIENCY_CHOICES, null=True
     )
     yoe = models.IntegerField(_("Years of Experience"), null=True)
+
+    def __str__(self):
+        return self.name
 
 
 class CandidateSkill(BaseModel):

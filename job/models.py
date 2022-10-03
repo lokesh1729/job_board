@@ -2,40 +2,9 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from candidate.models import Skill
 
-from job_board.users.models import UserProfile
-
-from .constants import Remote
-
-
-class BaseModel(models.Model):
-    class Meta:
-        abstract = True
-
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
-
-
-class Employer(BaseModel):
-    class Meta:
-        abstract = False
-
-    name = models.CharField(_("Employer Name"), max_length=100)
-    industry = models.CharField(_("Industry"), max_length=100)
-    profile = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
-
-
-class Recruiter(BaseModel):
-    class Meta:
-        abstract = False
-
-    profile = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
-    employer = models.ForeignKey(
-        Employer,
-        on_delete=models.CASCADE,
-        related_name="employees",
-        related_query_name="employee",
-    )
-    employee_id = models.CharField(_("Employee ID"), max_length=100)
+from recruiter.models import Recruiter, Company
+from .constants import JobType, Remote
+from common.models import BaseModel
 
 
 class Job(BaseModel):
@@ -48,6 +17,12 @@ class Job(BaseModel):
         (Remote.NO_REMOTE.name, Remote.NO_REMOTE.value),
     )
 
+    JOB_TYPE_CHOICES = (
+        (JobType.FULL_TIME.name, JobType.FULL_TIME.value),
+        (JobType.PART_TIME.name, JobType.PART_TIME.value),
+        (JobType.CONTRACT.name, JobType.CONTRACT.value),
+    )
+
     posted_by = models.ForeignKey(
         Recruiter,
         on_delete=models.CASCADE,
@@ -55,16 +30,21 @@ class Job(BaseModel):
         related_query_name="job",
     )
     company = models.ForeignKey(
-        Employer,
+        Company,
         on_delete=models.CASCADE,
         related_name="jobs",
         related_query_name="job",
+        help_text=_("The details of the company such as about, size, industry etc... will be populated on the job page. If no company is shown, create a new company from the dashboard")
     )
     external_url = models.URLField(_("External URL"), blank=True, null=True)
     job_description = models.TextField(
-        _("Job Description"), blank=True, null=True
+        _("Job Description"),
     )
-    min_yoe_required = models.IntegerField(_("Min YOE required"))
+    job_title = models.CharField(_("Job Title"), max_length=100, help_text="This will be displayed on the web page.")
+    position = models.CharField(_("Position"), max_length=100, help_text="Example : Account Executive, Software Engineer")
+    job_type = models.CharField(_("Job Type"), choices=JOB_TYPE_CHOICES, max_length=100)
+    min_yoe_required = models.IntegerField(_("Minimum years of experience required"))
+    min_salary = models.BigIntegerField(_("Min Salary in USD"))
     max_salary = models.BigIntegerField(_("Max Salary in USD"))
     location = models.CharField(_("Job Location"), max_length=255)
     skills_required = models.ManyToManyField(Skill)

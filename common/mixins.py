@@ -21,11 +21,10 @@ class RolePermissionMixin:
 class LoginRedirectMixin:
 
     def dispatch(self, request: http.HttpRequest, *args: Any, **kwargs: Any) -> HttpResponseBase:
-        import ipdb;ipdb.set_trace()
         if request.user.is_authenticated:
             if request.user is not None and hasattr(request.user, "role"):
-                if request.user.role == Role.Candidate:
+                if request.user.role == Role.CANDIDATE:
                     return redirect(reverse("candidate:onboarding"))
-                if request.user.role == Role.EMPLOYER:
-                    return redirect(reverse("employer:dashboard"))
+                if request.user.role == Role.RECRUITER:
+                    return redirect(reverse("recruiter:dashboard"))
         return super(LoginRedirectMixin, self).dispatch(request, *args, **kwargs)

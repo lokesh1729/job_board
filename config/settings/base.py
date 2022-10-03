@@ -79,7 +79,8 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "job_board.users",
     "candidate.apps.CandidateConfig",
-    "employer.apps.EmployerConfig",
+    "recruiter.apps.RecruiterConfig",
+    "job.apps.JobConfig",
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

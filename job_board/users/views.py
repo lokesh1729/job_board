@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, RedirectView, UpdateView, TemplateView
 
-from job_board.utils.mixins import LoginRedirectMixin
+from common.mixins import LoginRedirectMixin
 
 User = get_user_model()
 

@@ -13,13 +13,12 @@ urlpatterns = [
     path(
         "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"
     ),
-    # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
-    # User management
     path("users/", include("job_board.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
     path("candidate/", include("candidate.urls")),
-    path("employer/", include("employer.urls")),
+    path("recruiter/", include("recruiter.urls")),
+    path("job/", include("job.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 if settings.DEBUG:
     # Static file serving when using Gunicorn + Uvicorn for local web socket development
