@@ -9,6 +9,8 @@ from recruiter.forms import CompanyForm, RecruiterSignupForm
 from job_board.users.constants import Role
 from common.mixins import RolePermissionMixin
 from .models import Company
+from job.models import Job
+from . import repositories
 
 
 class RecruiterSignupView(views.SignupView):
@@ -24,11 +26,22 @@ class RecruiterSignupView(views.SignupView):
         return kwargs
 
 
-class RecruiterDashboardView(RolePermissionMixin, TemplateView, LoginRequiredMixin):
+class RecruiterDashboardView(LoginRequiredMixin, RolePermissionMixin, TemplateView):
     template_name = "recruiter/dashboard.html"
     role = Role.RECRUITER
 
-class CompanyCreateView(RolePermissionMixin, CreateView):
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context.update(
+            {
+                "jobs": repositories.list_jobs(self.request.user.profile.recruiter),
+                "display_edit_row": True,
+            }
+        )
+        return context
+
+
+class CompanyCreateView(LoginRequiredMixin, RolePermissionMixin, CreateView):
     role = Role.RECRUITER
     form_class = CompanyForm
     success_url = reverse_lazy("recruiter:dashboard")

@@ -13,7 +13,7 @@ class JobForm(forms.ModelForm):
 
     class Meta:
         model = Job
-        exclude = ("posted_by",)
+        exclude = ("posted_by", "active_till", "status", "slug")
 
     def save(self, commit=True):
         self.instance.posted_by=self.role

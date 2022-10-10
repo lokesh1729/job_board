@@ -10,7 +10,6 @@ class RecruiterSignupForm(BaseSignupForm):
 
 
 class CompanyForm(forms.ModelForm):
-    
     class Meta:
         model = Company
-        fields = ("name", "industry", "location", "size", "about")
+        fields = ("name", "logo", "url", "industry", "location", "size", "about")

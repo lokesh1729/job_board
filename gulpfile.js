@@ -95,7 +95,6 @@ function styles() {
         }).on('error', sass.logError)
       )
       .pipe(plumber()) // Checks for errors
-      // .pipe(postcss())
       .pipe(
         gulpif(
           process.env.NODE_ENV === 'production',

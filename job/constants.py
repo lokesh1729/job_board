@@ -11,3 +11,7 @@ class JobType(Enum):
     PART_TIME = "Part Time"
     CONTRACT = "Contract"
     INTERNSHIP = "Internship"
+
+class JobStatus(Enum):
+    ACTIVE = "active"
+    EXPIRED = "expired"

@@ -1,0 +1,30 @@
+{% load static i18n user_filters %}
+<div class="tw-flex tw-flex-col tw-justify-between tw-items-center tw-w-full {% if display_edit_row %}tw-h-52 md:tw-h-44 {% else %}tw-h-44 md:tw-h-36 {% endif %}tw-my-2 md:tw-my-4 tw-shadow-lg tw-p-6">
+    <div class="tw-flex tw-flex-row tw-justify-between tw-w-full">
+        <div class="tw-flex tw-flex-row tw-justify-start tw-items-center">
+            <img src="{{ job.logo }}" width="48" height="48" alt="Logo" />
+            <span class="tw-ml-2 lg:tw-ml-4 xl:tw-ml-6 2xl:tw-ml-6 tw-text-lg lg:tw-text-xl xl:tw-text-2xl">{{ job.position }} at {{ job.company_name }}</span>
+        </div>
+        <div class="tw-flex tw-flex-row tw-justify-end tw-items-center">
+            <span class="tw-text-sm tw-mx-2">Posted {{ job.created_on|timesince }} ago</span>
+            <a class="link-primary tw-mx-2" target="_blank" href="{{ job.slug }}"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+        </div>
+    </div>
+    <div class="tw-flex tw-flex-row tw-justify-between tw-w-full">
+        <div class="tw-flex tw-flex-row tw-justify-start tw-items-center">
+            {% for skill in job.skills %}<span class="badge text-bg-warning tw-p-2 tw-mx-1">{{ skill }}</span>{% endfor %}
+        </div>
+        <div class="tw-flex tw-flex-row tw-justify-between tw-items-center">
+            <span class="badge text-bg-info text-white tw-p-2 tw-mx-2">{{ job.remote }}</span>
+            <span class="badge text-bg-secondary text-white tw-p-2 tw-mx-2">{{ job.job_type }}</span>
+            <span class="tw-text-gray-600 tw-mx-4">${{ job.min_salary|cool_number }}-${{ job.max_salary|cool_number }}</span>
+        </div>
+    </div>
+    {% if display_edit_row %}
+        <div class="tw-flex tw-flex-row tw-justify-end tw-w-full">
+            <a class="link-primary tw-mx-4 tw-text-lg 2xl:tw-text-2xl" href="#"><i class="fa-solid fa-chart-line"></i></a>
+            <a class="link-info tw-mx-4 tw-text-lg 2xl:tw-text-2xl" href="#"><i class="fa-solid fa-pen-to-square"></i></a>
+            <a class="link-danger tw-mx-4 tw-text-lg 2xl:tw-text-2xl" href="#"><i class="fa-solid fa-trash"></i></a>
+        </div>
+    {% endif %}
+</div>

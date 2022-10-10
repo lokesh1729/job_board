@@ -278,3 +278,4 @@ SOCIALACCOUNT_ADAPTER = "job_board.users.adapters.SocialAccountAdapter"
 
 # Your stuff...
 # ------------------------------------------------------------------------------
+DEFAULT_JOB_ACTIVE_IN_DAYS = 30

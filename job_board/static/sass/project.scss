@@ -2,23 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "./custom_bootstrap_vars.scss";
+@import "../node_modules/bootstrap/scss/bootstrap";
+
 $fa-font-path: '../fonts/fontawesome';
-
-// Custom.scss
-// Option B: Include parts of Bootstrap
-
-// 1. Include functions first (so you can manipulate colors, SVGs, calc, etc)
-@import 'bootstrap/scss/functions';
-
-// 2. Include any default variable overrides here
-
-@import 'custom_bootstrap_vars.scss';
-
-// 3. Include remainder of required Bootstrap stylesheets
-@import 'bootstrap/scss/variables';
-@import 'bootstrap/scss/mixins';
-
-@import 'bootstrap/scss/bootstrap.scss';
 
 @import '@fortawesome/fontawesome-free/scss/fontawesome.scss';
 @import '@fortawesome/fontawesome-free/scss/regular.scss';
