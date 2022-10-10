@@ -20,15 +20,5 @@ class Migration(migrations.Migration):
                 verbose_name="Logo of the company",
             ),
             preserve_default=False,
-        ),
-        migrations.AddField(
-            model_name="company",
-            name="url",
-            field=models.URLField(
-                null=True,
-                help_text="URL of the company website",
-                verbose_name="Website URL",
-            ),
-            preserve_default=False,
-        ),
+        )
     ]
