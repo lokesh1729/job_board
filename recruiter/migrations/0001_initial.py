@@ -9,37 +9,93 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('users', '0003_alter_userprofile_role'),
+        ("users", "0003_alter_userprofile_role"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Company',
+            name="Company",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_on', models.DateTimeField(auto_now_add=True)),
-                ('updated_on', models.DateTimeField(auto_now=True)),
-                ('name', models.CharField(max_length=100, verbose_name='Company Name')),
-                ('industry', models.CharField(help_text='Which industry does it belong to? Examples: Software Engineering, Manufacturing', max_length=100, verbose_name='Industry')),
-                ('size', models.CharField(help_text="What's the employee headcount?", max_length=100, verbose_name='Company Size')),
-                ('location', models.CharField(help_text='Where is the headquarters located?', max_length=100, verbose_name='Company Location')),
-                ('about', models.TextField(help_text='Write about the company. It will be displayed on the web page.', verbose_name='About Company')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_on", models.DateTimeField(auto_now_add=True)),
+                ("updated_on", models.DateTimeField(auto_now=True)),
+                ("name", models.CharField(max_length=100, verbose_name="Company Name")),
+                (
+                    "industry",
+                    models.CharField(
+                        help_text="Which industry does it belong to? Examples: Software Engineering, Manufacturing",
+                        max_length=100,
+                        verbose_name="Industry",
+                    ),
+                ),
+                (
+                    "size",
+                    models.CharField(
+                        help_text="What's the employee headcount?",
+                        max_length=100,
+                        verbose_name="Company Size",
+                    ),
+                ),
+                (
+                    "location",
+                    models.CharField(
+                        help_text="Where is the headquarters located?",
+                        max_length=100,
+                        verbose_name="Company Location",
+                    ),
+                ),
+                (
+                    "about",
+                    models.TextField(
+                        help_text="Write about the company. It will be displayed on the web page.",
+                        verbose_name="About Company",
+                    ),
+                ),
+                (
+                    "url",
+                    models.URLField(
+                        help_text="URL of the company website",
+                        verbose_name="Website URL",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='Recruiter',
+            name="Recruiter",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_on', models.DateTimeField(auto_now_add=True)),
-                ('updated_on', models.DateTimeField(auto_now=True)),
-                ('companies', models.ManyToManyField(to='recruiter.Company')),
-                ('profile', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='users.userprofile')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_on", models.DateTimeField(auto_now_add=True)),
+                ("updated_on", models.DateTimeField(auto_now=True)),
+                ("companies", models.ManyToManyField(to="recruiter.Company")),
+                (
+                    "profile",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="users.userprofile",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
     ]

@@ -20,7 +20,10 @@ class UserDetailView(LoginRequiredMixin, DetailView):
     def get_object(self, queryset=None):
         passed_username = self.kwargs.get(self.slug_url_kwarg)
         curr_username = self.request.user.username
-        if User.objects.filter(username=passed_username).exists() and passed_username != curr_username:
+        if (
+            User.objects.filter(username=passed_username).exists()
+            and passed_username != curr_username
+        ):
             raise PermissionDenied
         return super().get_object(queryset)
 
@@ -44,17 +47,16 @@ class UserUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 user_update_view = UserUpdateView.as_view()
 
 
-class UserRedirectView(LoginRequiredMixin, RedirectView):
+class UserRedirectView(LoginRequiredMixin, LoginRedirectMixin, RedirectView):
 
     permanent = False
 
     def get_redirect_url(self):
-        return reverse(
-            "users:detail", kwargs={"username": self.request.user.username}
-        )
+        return reverse("users:detail", kwargs={"username": self.request.user.username})
 
 
 user_redirect_view = UserRedirectView.as_view()
+
 
 class UserSignupView(TemplateView, LoginRedirectMixin):
     template_name = "pages/signup.html"

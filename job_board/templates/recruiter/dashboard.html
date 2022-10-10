@@ -1,7 +1,16 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% block content %}
-  <div class="tw-flex tw-flex-col tw-justify-center tw-items-center tw-mx-4 md:tw-mx-8 lg:tw-mx-12 xl:tw-mx-16">
-    <a class="link-primary tw-text-lg md:tw-text-xl lg:tw-text-2xl" href="{% url 'job:new_job' %}">Post a new job</a>
-    <a class="link-primary tw-text-lg md:tw-text-xl lg:tw-text-2xl" href="{% url 'recruiter:new_company' %}">Create a new company</a>
+  <div class="tw-flex tw-flex-col tw-w-full tw-h-full">
+    <div class="tw-flex tw-flex-col tw-justify-center tw-items-center tw-mx-4 md:tw-mx-8 lg:tw-mx-12 xl:tw-mx-16">
+      <a class="link-primary tw-text-lg md:tw-text-xl lg:tw-text-2xl"
+         href="{% url 'job:new_job' %}">Post a new job</a>
+      <a class="link-primary tw-text-lg md:tw-text-xl lg:tw-text-2xl"
+         href="{% url 'recruiter:new_company' %}">Create a new company</a>
+    </div>
+    <div class="tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-h-full">
+      {% for job in jobs %}
+        {% include "job/job_card.html" with job=job display_edit_row=display_edit_row %}
+      {% endfor %}
+    </div>
   </div>
-{% endblock %}
+{% endblock content %}
