@@ -74,6 +74,7 @@ THIRD_PARTY_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    "django_filters",
 ]
 
 LOCAL_APPS = [
@@ -139,7 +140,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.common.BrokenLinkEmailsMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "job_board.users.middleware.RoleMiddleware"
+    "job_board.users.middleware.RoleMiddleware",
 ]
 
 # STATIC

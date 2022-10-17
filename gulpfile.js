@@ -188,11 +188,11 @@ function imgCompression() {
 }
 // Run django server
 function runServer(cb) {
-  var cmd = spawn('python', ['manage.py', 'runserver'], { stdio: 'inherit' });
-  cmd.on('close', function (code) {
-    console.log('runServer exited with code ' + code);
-    cb(code);
-  });
+  // var cmd = spawn('python', ['manage.py', 'runserver'], { stdio: 'inherit' });
+  // cmd.on('close', function (code) {
+  //   console.log('runServer exited with code ' + code);
+  //   cb(code);
+  // });
 }
 
 // Browser sync server for live reload

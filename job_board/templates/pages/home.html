@@ -1,5 +1,13 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
+
 {% block content %}
+    <form method="get" class="row row-cols-lg-auto align-items-center form--wrapper">
+        {{ filter_form | crispy }}
+        <div class="tw-ml-8 tw-pt-2">
+            <input class="btn btn-primary textinput" type="submit" value="Search"/>
+        </div>
+    </form>
     <div class="tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-h-full">
         {% for job in jobs %}
             {% include "job/job_card.html" with job=job %}
