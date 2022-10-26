@@ -12,4 +12,4 @@ class HomepageFilter(django_filters.FilterSet):
 
     class Meta:
         model = Job
-        fields = ["remote", "job_type", "min_salary", "max_salary"]
+        fields = ["remote", "job_type", "min_salary", "max_salary", "skills_required"]

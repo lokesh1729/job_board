@@ -87,38 +87,36 @@ function styles() {
     cssnano({ preset: 'default' }) // minify result
   ];
 
-  return (
-    src(`${paths.sass}/project.scss`)
-      .pipe(
-        sass({
-          includePaths: [paths.nodeModules, paths.sass]
-        }).on('error', sass.logError)
+  return src(`${paths.sass}/project.scss`)
+    .pipe(
+      sass({
+        includePaths: [paths.nodeModules, paths.sass]
+      }).on('error', sass.logError)
+    )
+    .pipe(plumber()) // Checks for errors
+    .pipe(
+      gulpif(
+        process.env.NODE_ENV === 'production',
+        purgecss({
+          content: [
+            `${paths.templates}/**/*.html`,
+            `${paths.sass}/**/*.scss`,
+            `${paths.js}/**/*.js`
+          ],
+          extractors: [
+            {
+              extractor: TailwindExtractor,
+              extensions: ['html', 'js', 'scss']
+            }
+          ]
+        })
       )
-      .pipe(plumber()) // Checks for errors
-      .pipe(
-        gulpif(
-          process.env.NODE_ENV === 'production',
-          purgecss({
-            content: [
-              `${paths.templates}/**/*.html`,
-              `${paths.sass}/**/*.scss`,
-              `${paths.js}/**/*.js`
-            ],
-            extractors: [
-              {
-                extractor: TailwindExtractor,
-                extensions: ['html', 'js', 'scss']
-              }
-            ]
-          })
-        )
-      )
-      .pipe(dest(paths.css))
-      .pipe(postcss(processCss))
-      .pipe(rename({ suffix: '.min' }))
-      .pipe(postcss(minifyCss)) // Minifies the result
-      .pipe(dest(paths.css))
-  );
+    )
+    .pipe(dest(paths.css))
+    .pipe(postcss(processCss))
+    .pipe(gulpif(process.env.NODE_ENV === 'production', postcss(minifyCss)))
+    .pipe(rename({ suffix: '.min' }))
+    .pipe(dest(paths.css));
 }
 
 // ref - https://stackoverflow.com/a/59786169/5123867
