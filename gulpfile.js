@@ -115,7 +115,7 @@ function styles() {
     .pipe(dest(paths.css))
     .pipe(postcss(processCss))
     .pipe(gulpif(process.env.NODE_ENV === 'production', postcss(minifyCss)))
-    .pipe(rename({ suffix: '.min' }))
+    .pipe(gulpif(process.env.NODE_ENV === 'production', rename({ suffix: '.min' })))
     .pipe(dest(paths.css));
 }
 
@@ -156,7 +156,7 @@ function scripts() {
       // Gulp 4 has some native sourcemap support built in
       .pipe(sourcemaps.init({ loadMaps: true }))
       .pipe(sourcemaps.write('.'))
-      .pipe(rename({ suffix: '.min' }))
+      .pipe(gulpif(process.env.NODE_ENV === 'production', rename({ suffix: '.min' })))
       // Where to send the output file
       .pipe(dest(paths.js))
   );

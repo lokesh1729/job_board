@@ -15,7 +15,7 @@
 
     <!-- Your stuff: Third-party CSS libraries go here -->
     <!-- This file stores project-specific CSS -->
-    <link href="{% static 'css/project.min.css' %}" rel="stylesheet">
+    <link href="{% if debug %} {% static 'css/project.css' %} {% else %} {% static 'css/project.min.css' %} {% endif %}" rel="stylesheet">
     {% endblock %}
     <!-- Le javascript
     ================================================== -->
@@ -25,7 +25,7 @@
       {% comment %} <script defer src="{% static 'js/vendors.min.js' %}"></script> {% endcomment %}
 
       <!-- place project specific Javascript in this file -->
-      <script defer src="{% static 'js/bundle.min.js' %}"></script>
+      <script defer src="{% if debug %} {% static 'js/bundle.js' %} {% else %} {% static 'js/bundle.min.js' %} {% endif %}  %}"></script>
 
     {% endblock javascript %}
 
