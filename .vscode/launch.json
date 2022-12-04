@@ -1,7 +1,7 @@
 {
   "configurations": [
     {
-      "name": "Python: Django",
+      "name": "Job Board",
       "type": "python",
       "request": "launch",
       "program": "${workspaceFolder}/manage.py",
