@@ -17,5 +17,5 @@ class JobView(LoginRequiredMixin, RolePermissionMixin, CreateView):
 
     def get_form_kwargs(self) -> Dict[str, Any]:
         kwargs = super().get_form_kwargs()
-        kwargs.update({"role": self.request.user.profile.recruiter})
+        kwargs.update({"posted_by": self.request.user.profile.recruiter})
         return kwargs

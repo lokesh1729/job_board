@@ -21,8 +21,14 @@ ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
 # https://docs.djangoproject.com/en/dev/ref/settings/#caches
 CACHES = {
     "default": {
-        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
-        "LOCATION": "",
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": env("REDIS_URL", default="redis://127.0.0.1:6379/2"),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            # Mimicing memcache behavior.
+            # https://github.com/jazzband/django-redis#memcached-exceptions-behavior
+            "IGNORE_EXCEPTIONS": True,
+        },
     }
 }
 
@@ -81,7 +87,7 @@ CELERY_TASK_EAGER_PROPAGATES = True
 # Your stuff...
 # ------------------------------------------------------------------------------
 ROOT_DIR = environ.Path(__file__) - 3
-
+SELECT2_CACHE_BACKEND = "default"
 
 # LOGGING = {
 #     "version": 1,
@@ -102,3 +108,4 @@ ROOT_DIR = environ.Path(__file__) - 3
 #     "loggers": {"django.db.backends": {"level": "DEBUG", "handlers": ["console"]}},
 #     "root": {"level": "INFO", "handlers": ["console"]},
 # }
+SHELL_PLUS_PRINT_SQL = True

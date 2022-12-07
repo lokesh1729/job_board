@@ -87,38 +87,36 @@ function styles() {
     cssnano({ preset: 'default' }) // minify result
   ];
 
-  return (
-    src(`${paths.sass}/project.scss`)
-      .pipe(
-        sass({
-          includePaths: [paths.nodeModules, paths.sass]
-        }).on('error', sass.logError)
+  return src(`${paths.sass}/project.scss`)
+    .pipe(
+      sass({
+        includePaths: [paths.nodeModules, paths.sass]
+      }).on('error', sass.logError)
+    )
+    .pipe(plumber()) // Checks for errors
+    .pipe(
+      gulpif(
+        process.env.NODE_ENV === 'production',
+        purgecss({
+          content: [
+            `${paths.templates}/**/*.html`,
+            `${paths.sass}/**/*.scss`,
+            `${paths.js}/**/*.js`
+          ],
+          extractors: [
+            {
+              extractor: TailwindExtractor,
+              extensions: ['html', 'js', 'scss']
+            }
+          ]
+        })
       )
-      .pipe(plumber()) // Checks for errors
-      .pipe(
-        gulpif(
-          process.env.NODE_ENV === 'production',
-          purgecss({
-            content: [
-              `${paths.templates}/**/*.html`,
-              `${paths.sass}/**/*.scss`,
-              `${paths.js}/**/*.js`
-            ],
-            extractors: [
-              {
-                extractor: TailwindExtractor,
-                extensions: ['html', 'js', 'scss']
-              }
-            ]
-          })
-        )
-      )
-      .pipe(dest(paths.css))
-      .pipe(postcss(processCss))
-      .pipe(rename({ suffix: '.min' }))
-      .pipe(postcss(minifyCss)) // Minifies the result
-      .pipe(dest(paths.css))
-  );
+    )
+    .pipe(dest(paths.css))
+    .pipe(postcss(processCss))
+    .pipe(gulpif(process.env.NODE_ENV === 'production', postcss(minifyCss)))
+    .pipe(gulpif(process.env.NODE_ENV === 'production', rename({ suffix: '.min' })))
+    .pipe(dest(paths.css));
 }
 
 // ref - https://stackoverflow.com/a/59786169/5123867
@@ -158,7 +156,7 @@ function scripts() {
       // Gulp 4 has some native sourcemap support built in
       .pipe(sourcemaps.init({ loadMaps: true }))
       .pipe(sourcemaps.write('.'))
-      .pipe(rename({ suffix: '.min' }))
+      .pipe(gulpif(process.env.NODE_ENV === 'production', rename({ suffix: '.min' })))
       // Where to send the output file
       .pipe(dest(paths.js))
   );
@@ -188,11 +186,11 @@ function imgCompression() {
 }
 // Run django server
 function runServer(cb) {
-  var cmd = spawn('python', ['manage.py', 'runserver'], { stdio: 'inherit' });
-  cmd.on('close', function (code) {
-    console.log('runServer exited with code ' + code);
-    cb(code);
-  });
+  // var cmd = spawn('python', ['manage.py', 'runserver'], { stdio: 'inherit' });
+  // cmd.on('close', function (code) {
+  //   console.log('runServer exited with code ' + code);
+  //   cb(code);
+  // });
 }
 
 // Browser sync server for live reload

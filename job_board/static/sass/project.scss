@@ -2,8 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-@import "./custom_bootstrap_vars.scss";
-@import "../node_modules/bootstrap/scss/bootstrap";
+@import './custom_bootstrap_vars.scss';
+@import '../../../node_modules/bootstrap/scss/bootstrap';
+@import '../../../node_modules/select2/dist/css/select2';
+@import '../css/django_select2';
 
 $fa-font-path: '../fonts/fontawesome';
 

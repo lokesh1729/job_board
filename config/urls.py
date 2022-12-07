@@ -7,6 +7,7 @@ from django.views import defaults as default_views
 from django.views.generic import TemplateView
 
 from .views import HomepageView
+from job_board.users.views import UserSignupView
 
 urlpatterns = [
     path("", HomepageView.as_view(), name="home"),
@@ -15,10 +16,12 @@ urlpatterns = [
     ),
     path(settings.ADMIN_URL, admin.site.urls),
     path("users/", include("job_board.users.urls", namespace="users")),
+    path("accounts/signup/", UserSignupView.as_view(), name="signup"),
+    path("candidate/", include("candidate.urls", namespace="candidate")),
+    path("recruiter/", include("recruiter.urls", namespace="recruiter")),
+    path("job/", include("job.urls", namespace="job")),
+    path("select2/", include("django_select2.urls")),
     path("accounts/", include("allauth.urls")),
-    path("candidate/", include("candidate.urls")),
-    path("recruiter/", include("recruiter.urls")),
-    path("job/", include("job.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 if settings.DEBUG:
     # Static file serving when using Gunicorn + Uvicorn for local web socket development

@@ -74,6 +74,8 @@ THIRD_PARTY_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    "django_filters",
+    "django_select2",
 ]
 
 LOCAL_APPS = [
@@ -139,7 +141,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.common.BrokenLinkEmailsMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "job_board.users.middleware.RoleMiddleware"
+    "job_board.users.middleware.RoleMiddleware",
 ]
 
 # STATIC
@@ -279,3 +281,7 @@ SOCIALACCOUNT_ADAPTER = "job_board.users.adapters.SocialAccountAdapter"
 # Your stuff...
 # ------------------------------------------------------------------------------
 DEFAULT_JOB_ACTIVE_IN_DAYS = 30
+
+SELECT2_JS = ""
+
+SELECT2_CSS = ""
