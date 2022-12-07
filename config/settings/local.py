@@ -108,3 +108,4 @@ SELECT2_CACHE_BACKEND = "default"
 #     "loggers": {"django.db.backends": {"level": "DEBUG", "handlers": ["console"]}},
 #     "root": {"level": "INFO", "handlers": ["console"]},
 # }
+SHELL_PLUS_PRINT_SQL = True

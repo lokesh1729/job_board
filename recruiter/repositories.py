@@ -11,8 +11,8 @@ def list_jobs(posted_by=None, queryset=None):
     """ """
     if queryset is None:
         queryset = Job.objects.all()
-        if posted_by is not None:
-            queryset = Job.objects.filter(posted_by=posted_by)
+    if posted_by is not None:
+        queryset = Job.objects.filter(posted_by=posted_by)
     queryset = queryset.annotate(
         company_name=F("company__name"),
         skills=ArrayAgg("skills_required__name"),
