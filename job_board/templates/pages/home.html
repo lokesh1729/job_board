@@ -2,9 +2,9 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <form method="get" class="row row-cols-lg-auto align-items-center form--wrapper">
+    <form method="get" class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 align-items-center form--wrapper">
         {{ filter_form | crispy }}
-        <div class="tw-ml-8 tw-pt-2">
+        <div class="tw-ml-4 tw-pt-2">
             <input class="btn btn-primary textinput" type="submit" value="Search"/>
         </div>
     </form>

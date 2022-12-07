@@ -75,6 +75,7 @@ THIRD_PARTY_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "django_filters",
+    "django_select2",
 ]
 
 LOCAL_APPS = [
@@ -280,3 +281,7 @@ SOCIALACCOUNT_ADAPTER = "job_board.users.adapters.SocialAccountAdapter"
 # Your stuff...
 # ------------------------------------------------------------------------------
 DEFAULT_JOB_ACTIVE_IN_DAYS = 30
+
+SELECT2_JS = ""
+
+SELECT2_CSS = ""

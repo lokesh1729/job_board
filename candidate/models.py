@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
 from job_board.users.models import UserProfile
@@ -91,6 +92,10 @@ class Skill(BaseModel):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        self.name = slugify(self.name)
+        super().save(*args, **kwargs)
 
 
 class CandidateSkill(BaseModel):

@@ -4,7 +4,8 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.2.0",
     "bootstrap": "^5.2.2",
-    "jquery": "^3.6.0"
+    "jquery": "^3.6.0",
+    "select2": "^4.1.0-rc.0"
   },
   "devDependencies": {
     "@babel/core": "^7.16.5",
@@ -46,7 +47,7 @@
     "last 2 versions"
   ],
   "scripts": {
-    "dev": "gulp",
+    "start": "gulp",
     "build": "gulp generate-assets"
   }
 }

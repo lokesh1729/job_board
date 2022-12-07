@@ -17,10 +17,11 @@ urlpatterns = [
     path(settings.ADMIN_URL, admin.site.urls),
     path("users/", include("job_board.users.urls", namespace="users")),
     path("accounts/signup/", UserSignupView.as_view(), name="signup"),
-    path("accounts/", include("allauth.urls")),
     path("candidate/", include("candidate.urls", namespace="candidate")),
     path("recruiter/", include("recruiter.urls", namespace="recruiter")),
     path("job/", include("job.urls", namespace="job")),
+    path("select2/", include("django_select2.urls")),
+    path("accounts/", include("allauth.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 if settings.DEBUG:
     # Static file serving when using Gunicorn + Uvicorn for local web socket development
