@@ -16,3 +16,4 @@ django-crispy-forms==1.13.0  # https://github.com/django-crispy-forms/django-cri
 crispy-bootstrap5==0.6  # https://github.com/django-crispy-forms/crispy-bootstrap5
 django-redis==5.1.0  # https://github.com/jazzband/django-redis
 django-filter==22.1
+django-select2==8.0.0
