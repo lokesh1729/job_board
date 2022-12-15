@@ -17,6 +17,18 @@ class Proficiency(Enum):
     TEN = 10
 
 
+class JobSearchChoices(Enum):
+    ACTIVELY_LOOKING = "actively_looking"
+    PASSIVELY_LOOKING = "passively_looking"
+    NOT_LOOKING = "not_looking"
+
+
+class ProfilePrivacyChoices(Enum):
+    NONE = "none"
+    ALL = "all"
+    ONLY_TO_WHOSE_JOBS_I_APPLIED_TO = "only_to_whose_jobs_i_applied_to"
+
+
 class OnboardingSteps:
     EDUCATION = "education-details"
     WORK = "work-details"

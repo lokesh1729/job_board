@@ -76,6 +76,7 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount",
     "django_filters",
     "django_select2",
+    "cities_light",
 ]
 
 LOCAL_APPS = [
@@ -285,3 +286,6 @@ DEFAULT_JOB_ACTIVE_IN_DAYS = 30
 SELECT2_JS = ""
 
 SELECT2_CSS = ""
+
+CITIES_LIGHT_TRANSLATION_LANGUAGES = ["en"]
+CITIES_LIGHT_INCLUDE_COUNTRIES = ["IN"]
