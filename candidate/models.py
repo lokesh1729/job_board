@@ -5,7 +5,6 @@ from cities_light.models import City
 from job_board.users.models import UserProfile
 
 from common.models import BaseModel, School, Skill
-from job.models import Job
 
 from .constants import Proficiency, JobSearchChoices, ProfilePrivacyChoices
 
@@ -16,7 +15,7 @@ class Candidate(BaseModel):
     onboarding_done = models.BooleanField(default=False)
     profile = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
     saved_jobs = models.ManyToManyField(
-        Job,
+        "job.Job",
         related_name="saved_by_candidates",
         related_query_name="saved_by_candidates",
     )
@@ -43,6 +42,7 @@ class CandidatePreference(BaseModel):
     )
 
     candidate = models.ForeignKey(
+        Candidate,
         on_delete=models.CASCADE,
         related_name="candidate_prefs",
         related_query_name="candidate_pref",
@@ -55,17 +55,18 @@ class CandidatePreference(BaseModel):
     )
     desired_cities = models.ManyToManyField(
         City,
-        on_delete=models.CASCADE,
         related_name="desired_candidates",
         related_query_name="desired_candidates",
     )
     expected_salary = models.IntegerField(_("Expected Salary"))
     current_salary = models.IntegerField(_("Expected Salary"))
     job_search_status = models.CharField(
-        _("Job Search Status"), choices=JOB_SEARCH_CHOICES
+        _("Job Search Status"),
+        choices=JOB_SEARCH_CHOICES,
+        max_length=100,
     )
     profile_privacy = models.CharField(
-        _("Who can see your profile?"), choices=PROFILE_PRIVACY_CHOICES
+        _("Who can see your profile?"), choices=PROFILE_PRIVACY_CHOICES, max_length=100
     )
 
 

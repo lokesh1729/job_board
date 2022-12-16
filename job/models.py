@@ -1,15 +1,14 @@
-from enum import unique
 import random
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.utils.text import slugify
 from django.conf import settings
-from candidate.models import Skill, Candidate
 
+from candidate.models import Candidate
 from recruiter.models import Recruiter, Company
 from .constants import JobType, Remote, JobStatus
-from common.models import BaseModel
+from common.models import BaseModel, SlugModel, Skill
 
 JOB_STATUS_CHOICES = (
     (JobStatus.ACTIVE.name, JobStatus.ACTIVE.value),
@@ -17,18 +16,12 @@ JOB_STATUS_CHOICES = (
 )
 
 
-class Category(BaseModel):
+class Category(BaseModel, SlugModel):
     name = models.CharField(_("Category Name"), max_length=100)
     slug = models.SlugField(_("Category Slug"), primary_key=True)
 
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
-
 
 class Job(BaseModel):
-    class Meta:
-        abstract = False
 
     REMOTE_CHOICES = (
         (Remote.FULLY_REMOTE.name, Remote.FULLY_REMOTE.value),
@@ -93,17 +86,18 @@ class Job(BaseModel):
     )
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(
-            "%s-%s-%s"
-            % (
-                self.company.slug,
-                self.position,
-                random.randint(0, 10000),
+        if self.pk is None:
+            self.slug = slugify(
+                "%s-%s-%s"
+                % (
+                    self.company.slug,
+                    self.position,
+                    random.randint(0, 10000),
+                )
             )
-        )
-        self.active_till = timezone.now() + timezone.timedelta(
-            days=settings.DEFAULT_JOB_ACTIVE_IN_DAYS
-        )
+            self.active_till = timezone.now() + timezone.timedelta(
+                days=settings.DEFAULT_JOB_ACTIVE_IN_DAYS
+            )
         super().save(*args, **kwargs)
 
     def __str__(self):

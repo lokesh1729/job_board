@@ -20,17 +20,15 @@ class AccountAdapter(DefaultAccountAdapter):
         return getattr(settings, "ACCOUNT_ALLOW_REGISTRATION", True)
 
     def save_user(self, request, user, form, commit=True):
-        user = super().save_user(request, user, form, commit)
-        profile = UserProfile.objects.create(
-            role=form.role, user=user
-        )
+        profile = UserProfile.objects.create(role=form.role, user=user)
         user.profile = profile
-        user.save()
+        user = super().save_user(request, user, form, commit)
         if form.role == constants.Role.RECRUITER.name:
             Recruiter.objects.create(profile=profile)
         elif form.role == constants.Role.CANDIDATE.name:
-            Candidate.objects.create(resume=form.cleaned_data["resume"],
-                                     profile=profile)
+            Candidate.objects.create(
+                resume=form.cleaned_data["resume"], profile=profile
+            )
 
     def get_login_redirect_url(self, request):
         utils.set_user_role(request)

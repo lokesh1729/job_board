@@ -7,12 +7,10 @@ from django.db.models.expressions import F
 from django.contrib.postgres.aggregates import ArrayAgg
 
 
-def list_jobs(posted_by=None, queryset=None):
+def list_jobs(queryset=None):
     """ """
     if queryset is None:
         queryset = Job.objects.all()
-    if posted_by is not None:
-        queryset = Job.objects.filter(posted_by=posted_by)
     queryset = (
         queryset.select_related("company")
         .prefetch_related("skills_required")

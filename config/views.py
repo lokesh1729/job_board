@@ -18,6 +18,10 @@ class HomepageView(LoginRedirectMixin, TemplateView):
         filter = HomepageFilter(self.request.GET, queryset=Job.objects.all())
         return {
             **context,
-            "jobs": repositories.list_jobs(queryset=filter.qs),
+            "jobs": repositories.list_jobs(
+                queryset=Job.objects.values(
+                    pk__in=filter.qs.values_list("pk", flat=True)
+                )
+            ),
             "filter_form": filter.form,
         }

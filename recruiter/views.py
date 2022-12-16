@@ -34,7 +34,9 @@ class RecruiterDashboardView(LoginRequiredMixin, RolePermissionMixin, TemplateVi
         context = super().get_context_data(**kwargs)
         context.update(
             {
-                "jobs": repositories.list_jobs(self.request.user.profile.recruiter),
+                "jobs": repositories.list_jobs(
+                    Job.objects.filter(posted_by=self.request.user.profile.recruiter)
+                ),
                 "display_edit_row": True,
             }
         )

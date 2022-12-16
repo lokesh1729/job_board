@@ -14,19 +14,11 @@ class BaseModel(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
 
 
-class School(BaseModel):
-    name = models.CharField(_("School Name"), max_length=255)
-    country = Country(_("Country"))
-    state = models.CharField(_("State"), max_length=100)
-    city = City(_("City"), max_length=100)
-    address = models.CharField(_("Address"), max_length=255, blank=True, null=True)
-    is_enabled = models.BooleanField(_("Is Enabled"), default=True, editable=False)
-    slug = models.SlugField(
-        _("School Slug"), max_length=100, primary_key=True, editable=False
-    )
+class SlugModel(models.Model):
+    class Meta:
+        abstract = True
 
-    def __str__(self):
-        return "%s - %s - %s" % (self.name, self.country, self.city)
+    slug = models.SlugField(_("Slug"), max_length=100, primary_key=True, editable=False)
 
     def save(self, *args, **kwargs):
         if self.pk is None:
@@ -36,16 +28,28 @@ class School(BaseModel):
         super().save(*args, **kwargs)
 
 
-class Skill(BaseModel):
-    name = models.CharField(_("Skill Name"), max_length=100, primary_key=True)
+class School(BaseModel, SlugModel):
+    name = models.CharField(_("School Name"), max_length=255)
+    country = Country(_("Country"))
+    state = models.CharField(_("State"), max_length=100)
+    city = models.ForeignKey(
+        City,
+        related_name="schools",
+        related_query_name="school",
+        on_delete=models.CASCADE,
+    )
+    address = models.CharField(_("Address"), max_length=255, blank=True, null=True)
+    is_enabled = models.BooleanField(_("Is Enabled"), default=True, editable=False)
+
+    def __str__(self):
+        return "%s - %s - %s" % (self.name, self.country, self.city)
+
+
+class Skill(BaseModel, SlugModel):
+    name = models.CharField(_("Skill Name"), max_length=100)
     slug = models.SlugField(
         _("Skill Slug"), max_length=100, primary_key=True, editable=False
     )
 
     def __str__(self):
         return self.name
-
-    def save(self, *args, **kwargs):
-        if self.pk is None:
-            self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
