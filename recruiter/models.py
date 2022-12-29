@@ -4,10 +4,10 @@ from django.utils.text import slugify
 from cities_light.models import City
 
 from job_board.users.models import UserProfile
-from common.models import BaseModel, SlugModel
+from common.models import BaseModel
 
 
-class Company(BaseModel, SlugModel):
+class Company(BaseModel):
     class Meta:
         abstract = False
         verbose_name_plural = "companies"

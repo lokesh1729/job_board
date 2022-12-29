@@ -10,7 +10,7 @@ from django.db.models import (
 )
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-from django.db.models.signals import post_save
+from django.db.models.signals import pre_save
 from django.dispatch import receiver
 
 from . import constants
@@ -64,11 +64,8 @@ class User(AbstractUser):
         return reverse("users:detail", kwargs={"username": self.username})
 
 
-@receiver(post_save, sender=User)
+@receiver(pre_save, sender=User)
 def callback(signal, sender, instance, **kwargs):
-    if (
-        kwargs.get("created", False) is True
-        and instance.is_staff
-        and instance.is_superuser
-    ):
-        UserProfile.objects.create(user=instance, role=constants.Role.ADMIN.name)
+    if instance.is_staff and instance.is_superuser:
+        profile = UserProfile.objects.create(role=constants.Role.ADMIN.name)
+        instance.profile = profile
