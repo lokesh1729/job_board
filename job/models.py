@@ -1,14 +1,14 @@
-from enum import unique
 import random
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
+from django.utils.text import slugify
 from django.conf import settings
-from candidate.models import Skill
 
+from candidate.models import Candidate
 from recruiter.models import Recruiter, Company
 from .constants import JobType, Remote, JobStatus
-from common.models import BaseModel
+from common.models import BaseModel, SlugModel, Skill
 
 JOB_STATUS_CHOICES = (
     (JobStatus.ACTIVE.name, JobStatus.ACTIVE.value),
@@ -16,9 +16,12 @@ JOB_STATUS_CHOICES = (
 )
 
 
+class Category(BaseModel, SlugModel):
+    name = models.CharField(_("Category Name"), max_length=100)
+    slug = models.SlugField(_("Category Slug"), primary_key=True)
+
+
 class Job(BaseModel):
-    class Meta:
-        abstract = False
 
     REMOTE_CHOICES = (
         (Remote.FULLY_REMOTE.name, Remote.FULLY_REMOTE.value),
@@ -54,7 +57,7 @@ class Job(BaseModel):
     job_title = models.CharField(
         _("Job Title"),
         max_length=100,
-        help_text="This will be displayed on the web page.",
+        help_text="This will be displayed as the title of the web page.",
     )
     position = models.CharField(
         _("Position"),
@@ -66,9 +69,11 @@ class Job(BaseModel):
     min_salary = models.BigIntegerField(_("Min Salary in USD"))
     max_salary = models.BigIntegerField(_("Max Salary in USD"))
     location = models.CharField(_("Job Location"), max_length=255)
-    skills_required = models.ManyToManyField(Skill)
+    skills_required = models.ManyToManyField(
+        Skill, related_name="jobs", related_query_name="jobs"
+    )
     remote = models.CharField(_("Remote?"), choices=REMOTE_CHOICES, max_length=100)
-    slug = models.SlugField(_("Slug"), unique=True)
+    slug = models.SlugField(_("Slug"), primary_key=True)
     status = models.CharField(
         _("Status"),
         choices=JOB_STATUS_CHOICES,
@@ -76,20 +81,42 @@ class Job(BaseModel):
         default=JobStatus.ACTIVE.name,
     )
     active_till = models.DateTimeField(_("Active Till"))
+    categories = models.ManyToManyField(
+        Category, related_name="jobs", related_query_name="jobs"
+    )
 
     def save(self, *args, **kwargs):
-        self.slug = "%s-%s--%s" % (
-            self.company.name,
-            self.position,
-            random.randint(0, 10000),
-        )
-        self.active_till = timezone.now() + timezone.timedelta(
-            days=settings.DEFAULT_JOB_ACTIVE_IN_DAYS
-        )
+        if self.pk is None:
+            self.slug = slugify(
+                "%s-%s-%s"
+                % (
+                    self.company.slug,
+                    self.position,
+                    random.randint(0, 10000),
+                )
+            )
+            self.active_till = timezone.now() + timezone.timedelta(
+                days=settings.DEFAULT_JOB_ACTIVE_IN_DAYS
+            )
         super().save(*args, **kwargs)
 
     def __str__(self):
         return self.slug
+
+
+class JobApplication(BaseModel):
+    job = models.ForeignKey(
+        Job,
+        related_name="job_applications",
+        related_query_name="job_application",
+        on_delete=models.CASCADE,
+    )
+    candidate = models.ForeignKey(
+        Candidate,
+        related_name="job_applications",
+        related_query_name="job_application",
+        on_delete=models.CASCADE,
+    )
 
 
 class JobStatusHistory(BaseModel):

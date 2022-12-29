@@ -17,3 +17,4 @@ crispy-bootstrap5==0.6  # https://github.com/django-crispy-forms/crispy-bootstra
 django-redis==5.1.0  # https://github.com/jazzband/django-redis
 django-filter==22.1
 django-select2==8.0.0
+django-cities-light==3.9.2

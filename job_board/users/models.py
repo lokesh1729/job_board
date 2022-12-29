@@ -16,35 +16,11 @@ from django.dispatch import receiver
 from . import constants
 
 
-class User(AbstractUser):
-    """Default user for Job Board."""
-
-    #: First and last name do not cover name patterns around the globe
-    name = CharField(_("Name of User"), blank=True, max_length=255)
-    first_name = None  # type: ignore
-    last_name = None  # type: ignore
-
-    def get_absolute_url(self):
-        """Get url for user's detail view.
-
-        Returns:
-            str: URL for user detail.
-
-        """
-        return reverse("users:detail", kwargs={"username": self.username})
-
-
 class UserProfile(Model):
     ROLE_CHOICES = (
         (constants.Role.CANDIDATE.name, constants.Role.CANDIDATE.value),
         (constants.Role.RECRUITER.name, constants.Role.RECRUITER.value),
-        (constants.Role.ADMIN.name, constants.Role.ADMIN.value)
-    )
-    user = OneToOneField(
-        User,
-        on_delete=CASCADE,
-        related_name="profile",
-        related_query_name="profile",
+        (constants.Role.ADMIN.name, constants.Role.ADMIN.value),
     )
     avatar = ImageField(_("Avatar"), blank=True, null=True)
     role = CharField(_("Role"), choices=ROLE_CHOICES, max_length=50)
@@ -64,7 +40,35 @@ class UserProfile(Model):
         return reverse("UserProfile_detail", kwargs={"pk": self.pk})
 
 
+class User(AbstractUser):
+    """Default user for Job Board."""
+
+    #: First and last name do not cover name patterns around the globe
+    name = CharField(_("Name of User"), blank=True, max_length=255)
+    first_name = None  # type: ignore
+    last_name = None  # type: ignore
+    profile = OneToOneField(
+        UserProfile,
+        on_delete=CASCADE,
+        related_name="user",
+        related_query_name="user",
+    )
+
+    def get_absolute_url(self):
+        """Get url for user's detail view.
+
+        Returns:
+            str: URL for user detail.
+
+        """
+        return reverse("users:detail", kwargs={"username": self.username})
+
+
 @receiver(post_save, sender=User)
 def callback(signal, sender, instance, **kwargs):
-    if kwargs.get("created", False) is True and instance.is_staff and instance.is_superuser:
+    if (
+        kwargs.get("created", False) is True
+        and instance.is_staff
+        and instance.is_superuser
+    ):
         UserProfile.objects.create(user=instance, role=constants.Role.ADMIN.name)

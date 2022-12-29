@@ -1,38 +1,76 @@
 from django.db import models
-from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
+from cities_light.models import City
 
 from job_board.users.models import UserProfile
 
-from .constants import Proficiency
-from common.models import BaseModel
+from common.models import BaseModel, School, Skill
+
+from .constants import Proficiency, JobSearchChoices, ProfilePrivacyChoices
 
 
 class Candidate(BaseModel):
-    class Meta:
-        abstract = False
 
     resume = models.FileField(upload_to="candidates/resumes")
     onboarding_done = models.BooleanField(default=False)
     profile = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
+    saved_jobs = models.ManyToManyField(
+        "job.Job",
+        related_name="saved_by_candidates",
+        related_query_name="saved_by_candidates",
+    )
 
     def __str__(self):
         return "Candidate : %s : %s" % (self.profile.user.name, self.profile.user.email)
 
 
-class School(BaseModel):
-    class Meta:
-        abstract = False
+class CandidatePreference(BaseModel):
 
-    name = models.CharField(_("School Name"), max_length=255)
-    country = models.CharField(_("Country"), max_length=100, blank=True, null=True)
-    state = models.CharField(_("State"), max_length=100, blank=True, null=True)
+    JOB_SEARCH_CHOICES = (
+        (JobSearchChoices.ACTIVELY_LOOKING, "Actively Looking"),
+        (JobSearchChoices.PASSIVELY_LOOKING, "Passively Looking"),
+        (JobSearchChoices.NOT_LOOKING, "Not Looking At The Moment"),
+    )
+
+    PROFILE_PRIVACY_CHOICES = (
+        (ProfilePrivacyChoices.NONE, "No one! Hide from everyone"),
+        (ProfilePrivacyChoices.ALL, "Everyone!"),
+        (
+            ProfilePrivacyChoices.ONLY_TO_WHOSE_JOBS_I_APPLIED_TO,
+            "Recruiters to whose jobs I applied!",
+        ),
+    )
+
+    candidate = models.ForeignKey(
+        Candidate,
+        on_delete=models.CASCADE,
+        related_name="candidate_prefs",
+        related_query_name="candidate_pref",
+    )
+    current_city = models.ForeignKey(
+        City,
+        on_delete=models.CASCADE,
+        related_name="preferred_candidates",
+        related_query_name="preferred_candidate",
+    )
+    desired_cities = models.ManyToManyField(
+        City,
+        related_name="desired_candidates",
+        related_query_name="desired_candidates",
+    )
+    expected_salary = models.IntegerField(_("Expected Salary"))
+    current_salary = models.IntegerField(_("Expected Salary"))
+    job_search_status = models.CharField(
+        _("Job Search Status"),
+        choices=JOB_SEARCH_CHOICES,
+        max_length=100,
+    )
+    profile_privacy = models.CharField(
+        _("Who can see your profile?"), choices=PROFILE_PRIVACY_CHOICES, max_length=100
+    )
 
 
 class CandidateEducation(BaseModel):
-    class Meta:
-        abstract = False
-
     candidate = models.ForeignKey(
         Candidate,
         on_delete=models.CASCADE,
@@ -51,9 +89,6 @@ class CandidateEducation(BaseModel):
 
 
 class CandidateExperience(BaseModel):
-    class Meta:
-        abstract = False
-
     candidate = models.ForeignKey(
         Candidate,
         on_delete=models.CASCADE,
@@ -67,40 +102,19 @@ class CandidateExperience(BaseModel):
     responsibilities = models.TextField(_("Responsibilities"))
 
 
-class Skill(BaseModel):
-    class Meta:
-        abstract = False
-
-    PROFICIENCY_CHOICES = (
-        (1, Proficiency.ONE),
-        (2, Proficiency.TWO),
-        (3, Proficiency.THREE),
-        (4, Proficiency.FOUR),
-        (5, Proficiency.FIVE),
-        (6, Proficiency.SIX),
-        (7, Proficiency.SEVEN),
-        (8, Proficiency.EIGHT),
-        (9, Proficiency.NINE),
-        (10, Proficiency.TEN),
-    )
-
-    name = models.SlugField(_("Skill Name"), max_length=25, primary_key=True)
-    proficiency = models.IntegerField(
-        _("Proficiency"), choices=PROFICIENCY_CHOICES, null=True
-    )
-    yoe = models.IntegerField(_("Years of Experience"), null=True)
-
-    def __str__(self):
-        return self.name
-
-    def save(self, *args, **kwargs):
-        self.name = slugify(self.name)
-        super().save(*args, **kwargs)
-
-
 class CandidateSkill(BaseModel):
-    class Meta:
-        abstract = False
+    PROFICIENCY_CHOICES = (
+        (Proficiency.ONE, Proficiency.ONE),
+        (Proficiency.TWO, Proficiency.TWO),
+        (Proficiency.THREE, Proficiency.THREE),
+        (Proficiency.FOUR, Proficiency.FOUR),
+        (Proficiency.FIVE, Proficiency.FIVE),
+        (Proficiency.SIX, Proficiency.SIX),
+        (Proficiency.SEVEN, Proficiency.SEVEN),
+        (Proficiency.EIGHT, Proficiency.EIGHT),
+        (Proficiency.NINE, Proficiency.NINE),
+        (Proficiency.TEN, Proficiency.TEN),
+    )
 
     candidate = models.ForeignKey(
         Candidate,
@@ -114,12 +128,11 @@ class CandidateSkill(BaseModel):
         related_name="candidate_skills",
         related_query_name="candidate_skill",
     )
+    proficiency = models.IntegerField(_("Proficiency"), choices=PROFICIENCY_CHOICES)
+    yoe = models.IntegerField(_("Years of Experience"))
 
 
 class CandidateProject(BaseModel):
-    class Meta:
-        abstract = False
-
     candidate = models.ForeignKey(
         Candidate,
         on_delete=models.CASCADE,
@@ -132,8 +145,19 @@ class CandidateProject(BaseModel):
 
 
 class CandidateMisc(BaseModel):
-    class Meta:
-        abstract = False
-
     achievements = models.TextField(_("Candidate Achievements"), blank=True, null=True)
     awards = models.TextField(_("Candidate Awards"), blank=True, null=True)
+
+
+class Alert(BaseModel):
+    candidate = models.ForeignKey(
+        Candidate,
+        on_delete=models.CASCADE,
+        related_name="alerts",
+        related_query_name="alert",
+        blank=True,
+        null=True,
+    )
+    name = models.CharField(_("Alert Name"), max_length=100)
+    email = models.EmailField(null=True)
+    filters = models.TextField(_("Filters"))
