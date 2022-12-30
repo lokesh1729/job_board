@@ -89,23 +89,20 @@ CELERY_TASK_EAGER_PROPAGATES = True
 ROOT_DIR = environ.Path(__file__) - 3
 SELECT2_CACHE_BACKEND = "default"
 
-# LOGGING = {
-#     "version": 1,
-#     "disable_existing_loggers": False,
-#     "formatters": {
-#         "verbose": {
-#             "format": "%(levelname)s %(asctime)s %(module)s "
-#             "%(process)d %(thread)d %(message)s"
-#         }
-#     },
-#     "handlers": {
-#         "console": {
-#             "level": "DEBUG",
-#             "class": "logging.StreamHandler",
-#             "formatter": "verbose",
-#         }
-#     },
-#     "loggers": {"django.db.backends": {"level": "DEBUG", "handlers": ["console"]}},
-#     "root": {"level": "INFO", "handlers": ["console"]},
-# }
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "django.db.backends": {
+            "level": "DEBUG",
+            "handlers": ["console"],
+            "propagate": True,
+        }
+    },
+}
 SHELL_PLUS_PRINT_SQL = True

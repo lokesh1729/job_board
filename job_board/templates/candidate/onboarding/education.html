@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="tw-mx-2 lg:tw-mx-4">
+        <div class="tw-flex tw-flex-col tw-max-h-full tw-p-2 lg:tw-p-4">
+            {% include "./step_header.html" %}
+            <div class="tw-mt-8">
+                <div class="tw-flex tw-flex-col tw-content-between">
+                    {% crispy form %}
+                    <div class="tw-mt-4 lg:tw-mt-8 tw-flex tw-justify-end">
+                        <button autocomplete="off"
+                                disabled
+                                type="submit"
+                                class="prev-btn btn btn-primary tw-text-center">Previous</button>
+                        <button autocomplete="off"
+                                type="submit"
+                                class="next-btn btn btn-primary tw-text-center tw-ml-8 lg:tw-ml-16">
+                            Next
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

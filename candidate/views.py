@@ -7,12 +7,12 @@ from typing import Dict
 
 from allauth.account import views
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.generic import TemplateView
 from django.db.models import F
 
-from candidate.forms import CandidateSignupForm
+from candidate.forms import CandidateSignupForm, CandidateEducationForm
 from candidate.models import (
     CandidateEducation,
     CandidateSkill,
@@ -53,8 +53,23 @@ class CandidateDashboardView(LoginRequiredMixin, RolePermissionMixin, TemplateVi
 
     def get(self, request, *args, **kwargs):
         if not request.user.profile.candidate.onboarding_done:
-            return redirect(reverse("candidate:onboarding"))
+            return redirect(reverse("candidate:education"))
         return super().get(request, *args, **kwargs)
+
+
+def candidate_education(request):
+    if request.method == "POST":
+        pass
+    else:
+        form = CandidateEducationForm()
+        return render(
+            request,
+            "candidate/onboarding/education.html",
+            context={
+                "form": form,
+                "step_header_mapping": OnboardingSteps.STEP_HEADER_MAPPING,
+            },
+        )
 
 
 class CandidateOnboardingView(LoginRequiredMixin, RolePermissionMixin, TemplateView):
@@ -124,7 +139,9 @@ def education_details(request):
     if request.is_ajax() and request.method == "POST":
         req_body = json.loads(request.body)
         candidate = request.user.profile.candidate
-        logger.info("education_details : got req_body %s for candidate %s", req_body, candidate)
+        logger.info(
+            "education_details : got req_body %s for candidate %s", req_body, candidate
+        )
         data = req_body["data"]
         assert data is not None
         data = sanitize_data(data)
@@ -165,7 +182,9 @@ def work_details(request):
     if request.is_ajax() and request.method == "POST":
         req_body = json.loads(request.body)
         candidate = request.user.profile.candidate
-        logger.info("work_details : got req_body %s for candidate %s", req_body, candidate)
+        logger.info(
+            "work_details : got req_body %s for candidate %s", req_body, candidate
+        )
         data = req_body["data"]
         assert data is not None
         data = sanitize_data(data)
@@ -207,7 +226,9 @@ def project_details(request):
     if request.is_ajax() and request.method == "POST":
         req_body = json.loads(request.body)
         candidate = request.user.profile.candidate
-        logger.info("project_details : got req_body %s for candidate %s", req_body, candidate)
+        logger.info(
+            "project_details : got req_body %s for candidate %s", req_body, candidate
+        )
         data = req_body["data"]
         assert data is not None
         data = sanitize_data(data)
@@ -249,7 +270,9 @@ def skill_details(request):
     if request.is_ajax() and request.method == "POST":
         req_body = json.loads(request.body)
         candidate = request.user.profile.candidate
-        logger.info("skill_details : got req_body %s for candidate %s", req_body, candidate)
+        logger.info(
+            "skill_details : got req_body %s for candidate %s", req_body, candidate
+        )
         data = req_body["data"]
         assert data is not None
         data = sanitize_data(data)

@@ -30,10 +30,10 @@ class ProfilePrivacyChoices(Enum):
 
 
 class OnboardingSteps:
-    EDUCATION = "education-details"
-    WORK = "work-details"
-    PROJECTS = "project-details"
-    SKILLS = "skill-details"
+    EDUCATION = "education"
+    WORK = "work"
+    PROJECTS = "projects"
+    SKILLS = "skills"
 
     ADD_REMOVE_BTN_MAPPING = [
         {

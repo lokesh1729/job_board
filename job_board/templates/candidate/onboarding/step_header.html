@@ -1,11 +1,11 @@
 <div id="step-header" class="tw-w-full tw-h-24 md:tw-h-28 lg:tw-h-32 xl:tw-h-40 2xl:tw-h-48">
   <div class="step-wrapper tw-flex tw-justify-between tw-w-full tw-h-full">
     {% for element in step_header_mapping %}
-      <div class="step-wrapper--element" data-link-to="{{element.data_link_to}}">
+      <div class="step-wrapper--element" data-link-to="{{ element.data_link_to }}">
         <div class="rounded-step">
-          <i class="{{element.icon}}"></i>
+          <i class="{{ element.icon }}"></i>
         </div>
-        <div class="step-text">{{element.name}}</div>
+        <div class="step-text">{{ element.name }}</div>
       </div>
     {% endfor %}
   </div>
