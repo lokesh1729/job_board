@@ -653,14 +653,6 @@ video {
   margin-top: 32px;
   margin-top: 2rem;
 }
-.tw-mt-4{
-  margin-top: 16px;
-  margin-top: 1rem;
-}
-.tw-ml-8{
-  margin-left: 32px;
-  margin-left: 2rem;
-}
 .tw-mr-16{
   margin-right: 64px;
   margin-right: 4rem;
@@ -668,6 +660,14 @@ video {
 .tw-ml-16{
   margin-left: 64px;
   margin-left: 4rem;
+}
+.tw-mt-4{
+  margin-top: 16px;
+  margin-top: 1rem;
+}
+.tw-ml-8{
+  margin-left: 32px;
+  margin-left: 2rem;
 }
 .tw-block{
   display: block;

@@ -3,10 +3,10 @@ const STEP2 = 2;
 const STEP3 = 3;
 const STEP4 = 4;
 
-const EDUCATION_DETAILS = "education-details";
-const WORK_DETAILS = "work-details";
-const PROJECT_DETAILS = "project-details";
-const SKILL_DETAILS = "skill-details";
+const EDUCATION_DETAILS = 'education';
+const WORK_DETAILS = 'work';
+const PROJECT_DETAILS = 'projects';
+const SKILL_DETAILS = 'skills';
 
 let stepsMapping = {
   [STEP1]: EDUCATION_DETAILS,
@@ -15,18 +15,18 @@ let stepsMapping = {
   [STEP4]: SKILL_DETAILS
 };
 
-let stepsSequence = [STEP1, STEP2, STEP3, STEP4];
+let stepsSequence = [EDUCATION_DETAILS, WORK_DETAILS, PROJECT_DETAILS, SKILL_DETAILS];
 
 let eventMap = [
   {
     addBtnClass: '.add-education',
     removeBtnClass: '.remove-education',
-    dataAttrVal: EDUCATION_DETAILS,
+    dataAttrVal: EDUCATION_DETAILS
   },
   {
     addBtnClass: '.add-work',
     removeBtnClass: '.remove-work',
-    dataAttrVal: WORK_DETAILS,
+    dataAttrVal: WORK_DETAILS
   },
   {
     addBtnClass: '.add-project',
@@ -40,4 +40,4 @@ let eventMap = [
   }
 ];
 
-export { stepsMapping, stepsSequence, eventMap, STEP1, STEP4 };
+export { stepsMapping, stepsSequence, eventMap, STEP1, STEP4, EDUCATION_DETAILS };

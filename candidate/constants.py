@@ -37,24 +37,24 @@ class OnboardingSteps:
 
     ADD_REMOVE_BTN_MAPPING = [
         {
-            "addBtnClass": ".add-education",
+            "addBtnClass": "add-education",
             "dataAttrName": "data-edu-id",
-            "removeBtnClass": ".remove-education",
+            "removeBtnClass": "remove-education",
         },
         {
-            "addBtnClass": ".add-work",
+            "addBtnClass": "add-work",
             "dataAttrName": "data-work-id",
-            "removeBtnClass": ".remove-work",
+            "removeBtnClass": "remove-work",
         },
         {
-            "addBtnClass": ".add-project",
+            "addBtnClass": "add-project",
             "dataAttrName": "data-project-id",
-            "removeBtnClass": ".remove-project",
+            "removeBtnClass": "remove-project",
         },
         {
-            "addBtnClass": ".add-skill",
+            "addBtnClass": "add-skill",
             "dataAttrName": "data-skill-id",
-            "removeBtnClass": ".remove-skill",
+            "removeBtnClass": "remove-skill",
         },
     ]
 

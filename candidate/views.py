@@ -1,31 +1,31 @@
 import copy
 import json
 import logging
-
-from typing import Any
-from typing import Dict
+from typing import Any, Dict
 
 from allauth.account import views
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect, render
-from django.urls import reverse
-from django.views.generic import TemplateView
 from django.db.models import F
+from django.forms import modelformset_factory
+from django.http import HttpResponseBadRequest, JsonResponse
+from django.shortcuts import redirect, render
+from django.urls import reverse, reverse_lazy
+from django.views.generic import FormView, TemplateView
 
-from candidate.forms import CandidateSignupForm, CandidateEducationForm
+from candidate.forms import CandidateEducationForm, CandidateSignupForm
 from candidate.models import (
-    CandidateEducation,
-    CandidateSkill,
-    CandidateProject,
     Candidate,
-    School,
+    CandidateEducation,
     CandidateExperience,
+    CandidateProject,
+    CandidateSkill,
+    School,
     Skill,
 )
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import JsonResponse, HttpResponseBadRequest
-from job_board.users.constants import Role
 from common.mixins import RolePermissionMixin
+from job_board.users.constants import Role
+
 from .constants import OnboardingSteps
 from .utils import sanitize_data
 
@@ -57,6 +57,51 @@ class CandidateDashboardView(LoginRequiredMixin, RolePermissionMixin, TemplateVi
         return super().get(request, *args, **kwargs)
 
 
+class CandidateEducationNew(LoginRequiredMixin, RolePermissionMixin, FormView):
+    template_name = "candidate/onboarding/education.html"
+    role = Role.CANDIDATE
+    success_url = reverse_lazy("candidate:work")
+
+    def form_valid(self, form):
+        """If the form is valid, save the associated model."""
+        form.save()
+        return super().form_valid(form)
+
+    def get_form_class(self):
+        return modelformset_factory(
+            CandidateEducation, form=CandidateEducationForm, extra=0
+        )
+
+    def get_form_kwargs(self) -> Dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        kwargs["form_kwargs"] = {"candidate": self.request.user.profile.candidate}
+        return kwargs
+
+    def get_initial(self) -> Dict[str, Any]:
+        return CandidateEducation.objects.filter(
+            candidate=self.request.user.profile.candidate
+        ).values("school", "degree", "from_date", "to_date")
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context.update(
+            {
+                "step_header_mapping": OnboardingSteps.STEP_HEADER_MAPPING,
+                "form_action": reverse("candidate:education"),
+                "form_id": OnboardingSteps.EDUCATION,
+                "add_btn_class": OnboardingSteps.STEPS_MAPPING[0]["add_btn_class"],
+                "add_btn_text": OnboardingSteps.STEPS_MAPPING[0]["add_btn_text"],
+                "remove_btn_text": OnboardingSteps.STEPS_MAPPING[0]["remove_btn_text"],
+                "remove_btn_class": OnboardingSteps.STEPS_MAPPING[0][
+                    "remove_btn_class"
+                ],
+                "btn_mapping": OnboardingSteps.ADD_REMOVE_BTN_MAPPING,
+                "success_url": self.get_success_url(),
+            }
+        )
+        return context
+
+
 def candidate_education(request):
     if request.method == "POST":
         pass
@@ -66,8 +111,9 @@ def candidate_education(request):
             request,
             "candidate/onboarding/education.html",
             context={
-                "form": form,
                 "step_header_mapping": OnboardingSteps.STEP_HEADER_MAPPING,
+                "form_action": reverse("candidate:education"),
+                "form_id": OnboardingSteps.EDUCATION,
             },
         )
 

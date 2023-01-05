@@ -24754,51 +24754,18 @@
 	}));
 
 	const STEP1 = 1;
-	const STEP2 = 2;
-	const STEP3 = 3;
-	const STEP4 = 4;
 
-	const EDUCATION_DETAILS = "education-details";
-	const WORK_DETAILS = "work-details";
-	const PROJECT_DETAILS = "project-details";
-	const SKILL_DETAILS = "skill-details";
+	const EDUCATION_DETAILS = 'education';
+	const WORK_DETAILS = 'work';
+	const PROJECT_DETAILS = 'projects';
+	const SKILL_DETAILS = 'skills';
 
-	let stepsMapping = {
-	  [STEP1]: EDUCATION_DETAILS,
-	  [STEP2]: WORK_DETAILS,
-	  [STEP3]: PROJECT_DETAILS,
-	  [STEP4]: SKILL_DETAILS
-	};
-
-	let stepsSequence = [STEP1, STEP2, STEP3, STEP4];
-
-	let eventMap = [
-	  {
-	    addBtnClass: '.add-education',
-	    removeBtnClass: '.remove-education',
-	    dataAttrVal: EDUCATION_DETAILS,
-	  },
-	  {
-	    addBtnClass: '.add-work',
-	    removeBtnClass: '.remove-work',
-	    dataAttrVal: WORK_DETAILS,
-	  },
-	  {
-	    addBtnClass: '.add-project',
-	    removeBtnClass: '.remove-project',
-	    dataAttrVal: PROJECT_DETAILS
-	  },
-	  {
-	    addBtnClass: '.add-skill',
-	    removeBtnClass: '.remove-skill',
-	    dataAttrVal: SKILL_DETAILS
-	  }
-	];
+	let stepsSequence = [EDUCATION_DETAILS, WORK_DETAILS, PROJECT_DETAILS, SKILL_DETAILS];
 
 	/*
-	* This file contains event handlers for "Previous" and "Next"
-	* buttons for the steps
-	*/
+	 * This file contains event handlers for "Previous" and "Next"
+	 * buttons for the steps
+	 */
 
 	/**
 	 * When clicked on Prev/Next button in the candidate onboarding page,
@@ -24819,144 +24786,74 @@
 	 * 3. Activate prev and next buttons (just in case if they are disabled before)
 	 *    The edge cases are self-explanatory.
 	 *
-	**/
-	function activateCurrStep(number) {
-	  console.log("activating currStep " + number);
-	  const form = stepsMapping[number];
-	  const ele = $(`#step-header div[data-link-to=${form}]`);
+	 **/
+	function activateCurrStep(stepName) {
+	  console.log('activating currStep ' + stepName);
+	  const ele = $(`#step-header div[data-link-to=${stepName}]`);
 	  $(ele).addClass('activate-step');
-	  $(`#${form}`).addClass("needs-validation");
-	  $(`#${form}`).removeClass("was-validated");
-	  $(`#${form}`).parent().show();
+	  $(`#${stepName}`).addClass('needs-validation');
+	  $(`#${stepName}`).removeClass('was-validated');
+	  $(`#${stepName}`).parent().show();
 
-	  stepsSequence
-	    .filter((item) => item < number)
-	    .forEach((item) => {
-	      const currForm = stepsMapping[item];
-	      $(`#${currForm}`).parent().hide();
-	    });
+	  const currIdx = stepsSequence.indexOf(stepName);
 
-	  stepsSequence
-	    .filter((item) => item > number)
-	    .forEach((item) => {
-	      const currForm = stepsMapping[item];
-	      const ele = $(`#step-header div[data-link-to=${currForm}]`);
-	      $(ele).removeClass('activate-step');
-	      $(`#${currForm}`).parent().hide();
-	    });
-
-	    const prevBtn = $(`#${form} + div > .prev-btn`);
-	    const nextBtn = $(`#${form} + div > .next-btn`);
-
-	    $(prevBtn).removeAttr('disabled');
-	    $(nextBtn).removeAttr('disabled');
-
-	    if (number <= STEP1) {
-	      $(prevBtn).attr('disabled', true);
-	    } else if (number === STEP4) {
-	      $(nextBtn).text('Submit');
-	    } else if (number > STEP4) {
-	      $(nextBtn).attr('disabled', true);
-	    } else if (number < STEP4 && $(nextBtn).text().trim() === 'Submit') {
-	      $(nextBtn).text('Next');
+	  stepsSequence.forEach((item, idx) => {
+	    if (idx != currIdx) {
+	      $(`#${item}`).parent().hide();
 	    }
-	}
+	    if (idx > currIdx) {
+	      $(`#step-header div[data-link-to=${item}]`).removeClass('activate-step');
+	    }
+	  });
 
-	/*
-	* When a next button is clicked, we should take the user
-	* to the next step but before that we need to validate the form.
-	*
-	* 1. validate the current form. `event.target` is the form element
-	*    because the event handler is running on the submit of form.
-	* 2. Loop through all form wrapper elements and get the values of input
-	*     elements and push it to `data` array.
-	* 3. make an AJAX call to save the data.
-	* 4. The result of the API would be an array of the objects contains
-	*     "pk" of an object. Put them inside the wrapper element as hidden element.
-	*
-	*/
+	  const prevBtn = $(`#${stepName} + div > .prev-btn`);
+	  const nextBtn = $(`#${stepName} + div > .next-btn`);
 
-	function formHandler (event) {
-	  event.preventDefault();
-	  event.stopPropagation();
-	  const form = event.target;
-	  form.classList.remove('needs-validation');
-	  form.classList.add('was-validated');
-	  if (!form.checkValidity()) {
-	    throw new Error("form validation failed");
+	  $(prevBtn).removeAttr('disabled');
+	  $(nextBtn).removeAttr('disabled');
+
+	  if (currIdx <= stepsSequence.indexOf(STEP1)) {
+	    $(prevBtn).attr('disabled', true);
 	  }
-	  let data = [];
-	  const stepName = form.getAttribute('id');
-	  const formName = form.getAttribute('name');
-	  Array.from(form.getElementsByClassName(`${stepName}--wrapper`)).forEach((element) =>
-	    data.push(
-	      $(element)
-	        .find('input, select, textarea')
-	        .toArray()
-	        .reduce(
-	          (acc, curr) =>
-	            Object.assign(acc, {
-	              [curr.name]: curr.value
-	            }),
-	          {}
-	        )
-	    )
-	  );
-	  const req = $.ajax(form.action, {
-	    accepts: 'application/json',
-	    contentType: 'application/json',
-	    method: form.method,
-	    headers: {
-	      'X-CSRFToken': $(form).find("input[name='csrfmiddlewaretoken']").attr('value')
-	    },
-	    data: JSON.stringify({
-	      data: data,
-	      form_type: formName
-	    })
-	  });
-	  req.done((result, status, jqXHR) => {
-	    let data = result.result;
-	    data.reverse();
-	    Array.from(form.getElementsByClassName(`${stepName}--wrapper`)).forEach(
-	      (element) => {
-	        if ($(element).find('input[type="hidden"][name="pk"]').toArray().length > 0) {
-	          $(element).find('input[type="hidden"][name="pk"]').attr("value", `${data.pop()}`);
-	        } else {
-	          $(element).append(`<input type="hidden" name="pk" value="${data.pop()}" />`);
-	        }
-	      }
-	    );
-	  });
-	  req.fail((result, status, error) => {
-	    console.error(`error in ajax request ${error} for url ${form.action}`);
-	    throw new Error('failed in making ajax request');
-	  });
+	  // else if (number === STEP4) {
+	  //   $(nextBtn).text('Submit');
+	  // }
+	  // else if (number > STEP4) {
+	  //   $(nextBtn).attr('disabled', true);
+	  // }
+	  // else if (number < STEP4 && $(nextBtn).text().trim() === 'Submit') {
+	  //   $(nextBtn).text('Next');
+	  // }
 	}
 
 	/** This function updates id and for attributes of form elements
-	 * 
-	 *  1. Each form element has ".form-field" class, so iterate over it.
-	 *  2. Find the label element and input element.
-	 *  3. "for" and "id" are joined by "--". so, split it and join it back
-	 *       with the new sequence.
-	 * 
-	**/
+	 *
+	 *  1. Iterate over form elements
+	 *  2. Split them by regex
+	 *  3. Update them by adding index
+	 *
+	 **/
 
 	const updateFormElementIds = (formElement, idx) => {
-	  for (const currElement of formElement.find('.form-field').toArray()) {
-	    const labelEle = currElement.children[0];
-	    const inputEle = currElement.children[1];
-	    const forVal = labelEle.getAttribute('for').split('--');
-	    labelEle.setAttribute('for', `${forVal[0]}--${idx}`);
-	    const idVal = inputEle.getAttribute('id').split('--');
-	    inputEle.setAttribute('id', `${idVal[0]}--${idx}`);
+	  for (const currElement of formElement.find('input,select,textarea').toArray()) {
+	    const sibbling = $(currElement).siblings('label').toArray()[0];
+	    const parent = $(currElement).parent('div').toArray()[0];
+	    const regex = /^([a-zA-Z_-]*)[0-9]+([a-zA-Z_-]*)$/;
+	    try {
+	      $(currElement).attr('id', $(currElement).attr('id').match(regex).slice(1).join(idx));
+	      $(currElement).attr('name', $(currElement).attr('name').match(regex).slice(1).join(idx));
+	      $(sibbling).attr('for', $(sibbling).attr('for').match(regex).slice(1).join(idx));
+	      $(parent).attr('id', $(parent).attr('id').match(regex).slice(1).join(idx));
+	    } catch (e) {
+	      console.error(e);
+	    }
 	  }
 	};
 
 	/**
 	 * This function is an event handler for "Add <form type>" for the form
 	 *   elements
-	 * 
+	 *
 	 * 1. deep-copy the wrapper element. Refer docs/candidate_onboarding.md for
 	 *    the context on the element structuring
 	 * 2. we need to change the form element ids. Why ? for every form element,
@@ -24969,24 +24866,28 @@
 	 *     because they are changed now. ** Think of it like updating an array from
 	 *     the current position to the end of it. **
 	 * 5. Enable the remove buttons of both parent and cloned element
-	 * 
-	 * 
-	**/
-	const handleAddElement = (element, dataAttrVal, removeBtnClass) => {
-	  const dataAttrName = "data-group";
+	 *
+	 *
+	 **/
+	const handleAddElement = (element, removeBtnClass) => {
+	  const dataAttrName = 'data-form-index';
 	  const parentWrapper = $(element).parent().parent();
 	  const clonedEle = $(parentWrapper.clone(true));
-	  let seq = parseInt(parentWrapper.attr(dataAttrName).split("--")[1]);
+	  let seq = parseInt(parentWrapper.attr(dataAttrName));
 	  updateFormElementIds(clonedEle, ++seq);
-	  clonedEle.attr(dataAttrName, `${dataAttrVal}--${seq}`);
+	  clonedEle.attr(dataAttrName, seq);
 	  for (const currSibbling of parentWrapper.nextAll().toArray()) {
 	    updateFormElementIds($(currSibbling), ++seq);
 	    $(currSibbling).attr(dataAttrName, seq);
 	  }
 	  clonedEle.insertAfter(parentWrapper);
+	  clonedEle.find('input[type="hidden"]').remove();
 	  parentWrapper.find(removeBtnClass).removeAttr('disabled');
 	  clonedEle.find(removeBtnClass).removeAttr('disabled');
-	  clonedEle.find("input[type='hidden']").remove();
+	  $('#id_form-TOTAL_FORMS').attr(
+	    'value',
+	    parseInt($('#id_form-TOTAL_FORMS').attr('value'), 10) + 1
+	  );
 	};
 
 	/** This function is an event handler for "Delete <form type>" for the form
@@ -24996,23 +24897,24 @@
 	 *  2. Delete the current wrapper element
 	 *  3. If there is only one element remaining i.e. prevSibblings + nextSibblings
 	 *       == 1, then disable their remove button.
-	**/
+	 **/
 
 	const handleRemoveElement = (element, dataAttrVal, removeBtnClass) => {
-	  const dataAttrName = "data-group";
+	  const dataAttrName = 'data-form-index';
 	  const parentWrapper = $(element).parent().parent();
-	  let seq = parseInt(parentWrapper.attr(dataAttrName).split("--")[1]);
-	  const nextSibblings = parentWrapper.nextAll('div[data-group]').toArray();
-	  const prevSibblings = parentWrapper.prevAll('div[data-group]').toArray();
+	  let seq = parseInt(parentWrapper.attr(dataAttrName));
+	  const nextSibblings = parentWrapper.nextAll(`div[${dataAttrName}]`).toArray();
+	  const prevSibblings = parentWrapper.prevAll(`div[${dataAttrName}]`).toArray();
 	  if (nextSibblings.length + prevSibblings.length == 0) {
-	    alert("unable to remove the element as there is only one left");
+	    alert('unable to remove the element as there is only one left');
 	    $(element).attr('disabled', true);
 	    return;
 	  }
 	  parentWrapper.remove();
 	  for (const currSibbling of nextSibblings) {
 	    updateFormElementIds($(currSibbling), seq);
-	    $(currSibbling).attr(dataAttrName, `${dataAttrVal}--${seq++}`);
+	    $(currSibbling).attr(dataAttrName, seq);
+	    seq++;
 	  }
 	  if (nextSibblings.length + prevSibblings.length === 1) {
 	    for (const currSibbling of nextSibblings) {
@@ -25022,58 +24924,21 @@
 	      $(currSibbling).find(removeBtnClass).attr('disabled', true);
 	    }
 	  }
+	  $('#id_form-TOTAL_FORMS').attr(
+	    'value',
+	    parseInt($('#id_form-TOTAL_FORMS').attr('value'), 10) - 1
+	  );
 	};
 
-	for (let key in stepsMapping) {
-	    $(`#${stepsMapping[key]}`).on('submit', formHandler);
-	}
+	activateCurrStep(EDUCATION_DETAILS);
+	const btnMapping = JSON.parse(document.getElementById('btn_mapping').textContent);
 
-	$('.next-btn').on('click', function (event) {
-	  event.stopPropagation();
-	  let currStep = parseInt(event.target.getAttribute("data-step-number"));
-	  console.log("currStep in next button is " + currStep);
-	  try {
-	    const currForm = stepsMapping[currStep];
-	    if (!currForm) {
-	      console.error("invalid currStep");
-	      return;
-	    }
-	    $(`#${currForm}`).submit();
-	    setTimeout(() => {
-	      if (currStep === STEP4) {
-	        window.location.href = '/candidate/dashboard';
-	      } else {
-	        activateCurrStep(currStep + 1);
-	      }
-	    }, 500);
-	  } catch (err) {
-	    console.error('error in clicking next button', err);
-	  }
-	});
-
-	/**
-	* When a previous button is clicked, there is no need of
-	* validating the current step. Why ?
-	*
-	* User may not filled the current step completely but he may want to
-	* go to the previous step to verify some of the information.
-	**/
-
-	$('.prev-btn').on('click', function (event) {
-	  event.stopPropagation();
-	  let currStep = parseInt(event.target.getAttribute("data-step-number"));
-	  console.log("currStep in previous button is " + currStep);
-	  activateCurrStep(currStep - 1);
-	});
-
-	activateCurrStep(STEP1);
-
-	eventMap.forEach((item) => {
-	  $(item.addBtnClass).on('click', (event) => {
-	    handleAddElement(event.target, item.dataAttrVal, item.removeBtnClass);
+	btnMapping.forEach((item) => {
+	  $(`.${item.addBtnClass}`).on('click', (event) => {
+	    handleAddElement(event.target, item.removeBtnClass);
 	  });
-	  $(item.removeBtnClass).on('click', (event) => {
-	    handleRemoveElement(event.target, item.dataAttrVal, item.removeBtnClass);
+	  $(`.${item.removeBtnClass}`).on('click', (event) => {
+	    handleRemoveElement(event.target, item.removeBtnClass);
 	  });
 	});
 
