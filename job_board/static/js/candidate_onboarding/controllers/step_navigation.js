@@ -2,7 +2,7 @@
  * This file contains event handlers for "Previous" and "Next"
  * buttons for the steps
  */
-import { stepsMapping, stepsSequence, STEP1, STEP4 } from './constants';
+import { stepsSequence } from './constants';
 
 /**
  * When clicked on Prev/Next button in the candidate onboarding page,
@@ -27,7 +27,6 @@ import { stepsMapping, stepsSequence, STEP1, STEP4 } from './constants';
 function activateCurrStep(stepName) {
   console.log('activating currStep ' + stepName);
   const ele = $(`#step-header div[data-link-to=${stepName}]`);
-  $(ele).addClass('activate-step');
   $(`#${stepName}`).addClass('needs-validation');
   $(`#${stepName}`).removeClass('was-validated');
   $(`#${stepName}`).parent().show();
@@ -37,6 +36,9 @@ function activateCurrStep(stepName) {
   stepsSequence.forEach((item, idx) => {
     if (idx != currIdx) {
       $(`#${item}`).parent().hide();
+    }
+    if (idx <= currIdx) {
+      $(`#step-header div[data-link-to=${item}]`).addClass('activate-step');
     }
     if (idx > currIdx) {
       $(`#step-header div[data-link-to=${item}]`).removeClass('activate-step');
@@ -48,19 +50,6 @@ function activateCurrStep(stepName) {
 
   $(prevBtn).removeAttr('disabled');
   $(nextBtn).removeAttr('disabled');
-
-  if (currIdx <= stepsSequence.indexOf(STEP1)) {
-    $(prevBtn).attr('disabled', true);
-  }
-  // else if (number === STEP4) {
-  //   $(nextBtn).text('Submit');
-  // }
-  // else if (number > STEP4) {
-  //   $(nextBtn).attr('disabled', true);
-  // }
-  // else if (number < STEP4 && $(nextBtn).text().trim() === 'Submit') {
-  //   $(nextBtn).text('Next');
-  // }
 }
 
 /*

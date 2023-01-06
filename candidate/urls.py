@@ -5,13 +5,16 @@ from . import views
 urlpatterns = [
     path("dashboard/", views.CandidateDashboardView.as_view(), name="dashboard"),
     path("signup/", views.CandidateSignupView.as_view(), name="signup"),
-    # path("onboarding/", views.CandidateOnboardingView.as_view(), name="onboarding"),
+    path(
+        "onboarding/preferences",
+        views.CandidatePreferenceView.as_view(),
+        name="preferences",
+    ),
     path(
         "onboarding/education", views.CandidateEducationNew.as_view(), name="education"
     ),
-    path("onboarding/education", views.education_details, name="education"),
-    path("onboarding/work", views.work_details, name="work"),
-    path("onboarding/project", views.project_details, name="project"),
-    path("onboarding/skill", views.skill_details, name="skill"),
+    path("onboarding/work", views.CandidateWorkView.as_view(), name="work"),
+    path("onboarding/projects", views.CandidateProjectView.as_view(), name="projects"),
+    path("onboarding/skills", views.CandidateSkillView.as_view(), name="skills"),
 ]
 app_name = "candidate"

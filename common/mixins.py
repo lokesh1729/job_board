@@ -27,7 +27,7 @@ class LoginRedirectMixin:
         if request.user.is_authenticated:
             if request.user is not None and hasattr(request.user, "role"):
                 if request.user.role == Role.CANDIDATE:
-                    return redirect(reverse("candidate:education"))
+                    return redirect(reverse("candidate:preferences"))
                 if request.user.role == Role.RECRUITER:
                     return redirect(reverse("recruiter:dashboard"))
         return super(LoginRedirectMixin, self).dispatch(request, *args, **kwargs)

@@ -14,6 +14,14 @@ const updateFormElementIds = (formElement, idx) => {
     try {
       $(currElement).attr('id', $(currElement).attr('id').match(regex).slice(1).join(idx));
       $(currElement).attr('name', $(currElement).attr('name').match(regex).slice(1).join(idx));
+      // try {
+      //   $(currElement).attr(
+      //     'data-select2-id',
+      //     $(currElement).attr('data-select2-id').match(regex).slice(1).join(idx)
+      //   );
+      // } catch (err) {
+      //   // ignore exception
+      // }
       $(sibbling).attr('for', $(sibbling).attr('for').match(regex).slice(1).join(idx));
       $(parent).attr('id', $(parent).attr('id').match(regex).slice(1).join(idx));
     } catch (e) {
