@@ -8,25 +8,17 @@
 
 const updateFormElementIds = (formElement, idx) => {
   for (const currElement of formElement.find('input,select,textarea').toArray()) {
+    if ($(currElement).attr('type') === 'hidden') continue;
     const sibbling = $(currElement).siblings('label').toArray()[0];
     const parent = $(currElement).parent('div').toArray()[0];
     const regex = /^([a-zA-Z_-]*)[0-9]+([a-zA-Z_-]*)$/;
-    try {
-      $(currElement).attr('id', $(currElement).attr('id').match(regex).slice(1).join(idx));
-      $(currElement).attr('name', $(currElement).attr('name').match(regex).slice(1).join(idx));
-      // try {
-      //   $(currElement).attr(
-      //     'data-select2-id',
-      //     $(currElement).attr('data-select2-id').match(regex).slice(1).join(idx)
-      //   );
-      // } catch (err) {
-      //   // ignore exception
-      // }
-      $(sibbling).attr('for', $(sibbling).attr('for').match(regex).slice(1).join(idx));
-      $(parent).attr('id', $(parent).attr('id').match(regex).slice(1).join(idx));
-    } catch (e) {
-      console.error(e);
+    $(currElement).attr('id', $(currElement).attr('id').match(regex).slice(1).join(idx));
+    $(currElement).attr('name', $(currElement).attr('name').match(regex).slice(1).join(idx));
+    if ($(currElement).attr('data-select2-id')) {
+      $(currElement).attr('data-select2-id', `select2-data-${$(currElement).attr('id')}`);
     }
+    $(sibbling).attr('for', $(sibbling).attr('for').match(regex).slice(1).join(idx));
+    $(parent).attr('id', $(parent).attr('id').match(regex).slice(1).join(idx));
   }
 };
 
@@ -52,15 +44,15 @@ const updateFormElementIds = (formElement, idx) => {
 const handleAddElement = (element, removeBtnClass) => {
   const dataAttrName = 'data-form-index';
   const parentWrapper = $(element).parent().parent();
-  const clonedEle = $(parentWrapper.clone(true));
+  $('.django-select2').select2('destroy');
+  const clonedEle = $(parentWrapper.clone(false));
   let seq = parseInt(parentWrapper.attr(dataAttrName));
-  updateFormElementIds(clonedEle, ++seq);
-  clonedEle.attr(dataAttrName, seq);
+  clonedEle.insertAfter(parentWrapper);
   for (const currSibbling of parentWrapper.nextAll().toArray()) {
     updateFormElementIds($(currSibbling), ++seq);
     $(currSibbling).attr(dataAttrName, seq);
   }
-  clonedEle.insertAfter(parentWrapper);
+  $('.django-select2').djangoSelect2();
   clonedEle.find('input[type="hidden"]').remove();
   parentWrapper.find(removeBtnClass).removeAttr('disabled');
   clonedEle.find(removeBtnClass).removeAttr('disabled');
@@ -109,5 +101,19 @@ const handleRemoveElement = (element, dataAttrVal, removeBtnClass) => {
     parseInt($('#id_form-TOTAL_FORMS').attr('value'), 10) - 1
   );
 };
+
+var unsaved = false;
+
+$(':input').on('change', function () {
+  unsaved = true;
+});
+
+function unloadPage() {
+  if (unsaved) {
+    return 'You have unsaved changes on this page. Do you want to leave this page and discard your changes or stay on this page?';
+  }
+}
+
+window.onbeforeunload = unloadPage;
 
 export { handleAddElement, handleRemoveElement };

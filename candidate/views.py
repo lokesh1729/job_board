@@ -67,7 +67,12 @@ class CandidatePreferenceView(LoginRequiredMixin, RolePermissionMixin, FormView)
         return super().form_valid(form)
 
     def get_form_class(self):
-        return modelformset_factory(CandidatePreference, form=CandidatePreferenceForm)
+        extra = 1
+        if len(self.get_initial()) > 0:
+            extra = 0
+        return modelformset_factory(
+            CandidatePreference, form=CandidatePreferenceForm, extra=extra
+        )
 
     def get_form_kwargs(self) -> Dict[str, Any]:
         kwargs = super().get_form_kwargs()
@@ -119,7 +124,12 @@ class CandidateEducationNew(LoginRequiredMixin, RolePermissionMixin, FormView):
         return super().form_valid(form)
 
     def get_form_class(self):
-        return modelformset_factory(CandidateEducation, form=CandidateEducationForm)
+        extra = 1
+        if len(self.get_initial()) > 0:
+            extra = 0
+        return modelformset_factory(
+            CandidateEducation, form=CandidateEducationForm, extra=extra
+        )
 
     def get_form_kwargs(self) -> Dict[str, Any]:
         kwargs = super().get_form_kwargs()
@@ -174,9 +184,11 @@ class CandidateWorkView(LoginRequiredMixin, RolePermissionMixin, FormView):
         return super().form_valid(form)
 
     def get_form_class(self):
+        extra = 1
+        if len(self.get_initial()) > 0:
+            extra = 0
         return modelformset_factory(
-            CandidateExperience,
-            form=CandidateExperienceForm,
+            CandidateExperience, form=CandidateExperienceForm, extra=extra
         )
 
     def get_form_kwargs(self) -> Dict[str, Any]:
@@ -232,9 +244,11 @@ class CandidateProjectView(LoginRequiredMixin, RolePermissionMixin, FormView):
         return super().form_valid(form)
 
     def get_form_class(self):
+        extra = 1
+        if len(self.get_initial()) > 0:
+            extra = 0
         return modelformset_factory(
-            CandidateProject,
-            form=CandidateProjectForm,
+            CandidateProject, form=CandidateProjectForm, extra=extra
         )
 
     def get_form_kwargs(self) -> Dict[str, Any]:
@@ -290,9 +304,11 @@ class CandidateSkillView(LoginRequiredMixin, RolePermissionMixin, FormView):
         return super().form_valid(form)
 
     def get_form_class(self):
+        extra = 1
+        if len(self.get_initial()) > 0:
+            extra = 0
         return modelformset_factory(
-            CandidateSkill,
-            form=CandidateSkillForm,
+            CandidateSkill, form=CandidateSkillForm, extra=extra
         )
 
     def get_form_kwargs(self) -> Dict[str, Any]:
