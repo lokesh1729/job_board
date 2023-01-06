@@ -4,18 +4,20 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>{% block title %}Job Board{% endblock title %}</title>
+    <title>
+      {% block title %}
+        Job Board
+      {% endblock title %}
+    </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Job Board">
     <meta name="author" content="Lokesh Sanapalli">
-
     <link rel="icon" href="{% static 'images/favicons/favicon.ico' %}">
-
     {% block css %}
-
-    <!-- Your stuff: Third-party CSS libraries go here -->
-    <!-- This file stores project-specific CSS -->
-    <link href="{% if debug %} {% static 'css/project.css' %} {% else %} {% static 'css/project.min.css' %} {% endif %}" rel="stylesheet">
+      <!-- Your stuff: Third-party CSS libraries go here -->
+      <!-- This file stores project-specific CSS -->
+      <link href="{% if debug %} {% static 'dist/project.css' %} {% else %} {% static 'dist/project.min.css' %} {% endif %}"
+            rel="stylesheet">
     {% endblock %}
     <!-- Le javascript
     ================================================== -->
@@ -23,39 +25,31 @@
     {% block javascript %}
       <!-- Vendor dependencies bundled as one file-->
       {% comment %} <script defer src="{% static 'js/vendors.min.js' %}"></script> {% endcomment %}
-
       <!-- place project specific Javascript in this file -->
-      <script defer src="{% if debug %} {% static 'js/bundle.js' %} {% else %} {% static 'js/bundle.min.js' %} {% endif %}"></script>
-
+      <script defer src="{% if debug %} {% static 'dist/bundle.js' %} {% else %} {% static 'dist/bundle.min.js' %} {% endif %}"></script>
     {% endblock javascript %}
-
   </head>
-
   <body>
-
-    <div class="mb-1">
-      {% include 'layout/navbar.html' %}
-    </div>
-
+    <div class="mb-1">{% include 'layout/navbar.html' %}</div>
     <div class="container">
-
       {% if messages %}
         {% for message in messages %}
           <div class="alert alert-dismissible {% if message.tags %}alert-{{ message.tags }}{% endif %}">
             {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close"></button>
           </div>
         {% endfor %}
       {% endif %}
-
       {% block content %}
         <p>Use this document as a way to quick start any new project.</p>
       {% endblock content %}
-
-    </div> <!-- /container -->
-
-    {% block modal %}{% endblock modal %}
-
+    </div>
+    <!-- /container -->
+    {% block modal %}
+    {% endblock modal %}
     {% block inline_javascript %}
     {% endblock inline_javascript %}
   </body>
