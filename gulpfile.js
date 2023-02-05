@@ -27,7 +27,6 @@ const plumber = require('gulp-plumber');
 const reload = browserSync.reload;
 const rename = require('gulp-rename');
 const sass = require('gulp-sass')(require('sass'));
-const spawn = require('child_process').spawn;
 const uglify = require('gulp-uglify-es').default;
 
 // *Optional* Depends on what JS features you want vs what browsers you need to support
@@ -65,7 +64,8 @@ function pathsConfig() {
     fonts: `${this.app}/static/fonts`,
     images: `${this.app}/static/images`,
     js: `${this.app}/static/js`,
-    tailwind: `./tailwind.config.js`
+    tailwind: `./tailwind.config.js`,
+    dist: `${this.app}/static/dist`
   };
 }
 
@@ -112,11 +112,11 @@ function styles() {
         })
       )
     )
-    .pipe(dest(paths.css))
+    .pipe(dest(paths.dist))
     .pipe(postcss(processCss))
     .pipe(gulpif(process.env.NODE_ENV === 'production', postcss(minifyCss)))
     .pipe(gulpif(process.env.NODE_ENV === 'production', rename({ suffix: '.min' })))
-    .pipe(dest(paths.css));
+    .pipe(dest(paths.dist));
 }
 
 // ref - https://stackoverflow.com/a/59786169/5123867
@@ -158,7 +158,7 @@ function scripts() {
       .pipe(sourcemaps.write('.'))
       .pipe(gulpif(process.env.NODE_ENV === 'production', rename({ suffix: '.min' })))
       // Where to send the output file
-      .pipe(dest(paths.js))
+      .pipe(dest(paths.dist))
   );
   // return src(`${paths.js}/project.js`)
   //   .pipe(plumber()) // Checks for errors
@@ -205,7 +205,7 @@ function initBrowserSync() {
 // Watch
 function watchPaths() {
   watch([`${paths.sass}/**/*.scss`, `${paths.templates}/**/*.html`], styles).on('change', reload);
-  watch([`${paths.js}/**/*.js`, `!${paths.js}/*.min.js`], scripts).on('change', reload);
+  watch([`${paths.js}/**/*.js`], scripts).on('change', reload);
 }
 
 // Generate all assets

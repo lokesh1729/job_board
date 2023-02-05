@@ -1,12 +1,11 @@
+from cities_light.models import City
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from cities_light.models import City
-
-from job_board.users.models import UserProfile
 
 from common.models import BaseModel, School, Skill
+from job_board.users.models import UserProfile
 
-from .constants import Proficiency, JobSearchChoices, ProfilePrivacyChoices
+from .constants import JobSearchChoices, Proficiency, ProfilePrivacyChoices
 
 
 class Candidate(BaseModel):
@@ -27,17 +26,23 @@ class Candidate(BaseModel):
 class CandidatePreference(BaseModel):
 
     JOB_SEARCH_CHOICES = (
-        (JobSearchChoices.ACTIVELY_LOOKING, "Actively Looking"),
-        (JobSearchChoices.PASSIVELY_LOOKING, "Passively Looking"),
-        (JobSearchChoices.NOT_LOOKING, "Not Looking At The Moment"),
+        (
+            JobSearchChoices.ACTIVELY_LOOKING.name,
+            JobSearchChoices.ACTIVELY_LOOKING.value,
+        ),
+        (
+            JobSearchChoices.PASSIVELY_LOOKING.name,
+            JobSearchChoices.PASSIVELY_LOOKING.value,
+        ),
+        (JobSearchChoices.NOT_LOOKING.name, JobSearchChoices.NOT_LOOKING.value),
     )
 
     PROFILE_PRIVACY_CHOICES = (
-        (ProfilePrivacyChoices.NONE, "No one! Hide from everyone"),
-        (ProfilePrivacyChoices.ALL, "Everyone!"),
+        (ProfilePrivacyChoices.NONE.name, ProfilePrivacyChoices.NONE.value),
+        (ProfilePrivacyChoices.ALL.name, ProfilePrivacyChoices.ALL.value),
         (
-            ProfilePrivacyChoices.ONLY_TO_WHOSE_JOBS_I_APPLIED_TO,
-            "Recruiters to whose jobs I applied!",
+            ProfilePrivacyChoices.ONLY_TO_WHOSE_JOBS_I_APPLIED_TO.name,
+            ProfilePrivacyChoices.ONLY_TO_WHOSE_JOBS_I_APPLIED_TO.value,
         ),
     )
 
@@ -59,14 +64,25 @@ class CandidatePreference(BaseModel):
         related_query_name="desired_candidates",
     )
     expected_salary = models.IntegerField(_("Expected Salary"))
-    current_salary = models.IntegerField(_("Expected Salary"))
+    current_salary = models.IntegerField(
+        _("Current Salary"), help_text="We won't tell this to anyone."
+    )
     job_search_status = models.CharField(
         _("Job Search Status"),
         choices=JOB_SEARCH_CHOICES,
         max_length=100,
     )
     profile_privacy = models.CharField(
-        _("Who can see your profile?"), choices=PROFILE_PRIVACY_CHOICES, max_length=100
+        _("Who can see your profile?"),
+        choices=PROFILE_PRIVACY_CHOICES,
+        max_length=100,
+        help_text="Be diligent in setting this",
+    )
+    total_yoe = models.IntegerField(
+        _("Total Years of Experience?"),
+        help_text="Enter zero if you are a fresher.",
+        null=True,
+        blank=True,
     )
 
 
@@ -104,16 +120,16 @@ class CandidateExperience(BaseModel):
 
 class CandidateSkill(BaseModel):
     PROFICIENCY_CHOICES = (
-        (Proficiency.ONE, Proficiency.ONE),
-        (Proficiency.TWO, Proficiency.TWO),
-        (Proficiency.THREE, Proficiency.THREE),
-        (Proficiency.FOUR, Proficiency.FOUR),
-        (Proficiency.FIVE, Proficiency.FIVE),
-        (Proficiency.SIX, Proficiency.SIX),
-        (Proficiency.SEVEN, Proficiency.SEVEN),
-        (Proficiency.EIGHT, Proficiency.EIGHT),
-        (Proficiency.NINE, Proficiency.NINE),
-        (Proficiency.TEN, Proficiency.TEN),
+        (Proficiency.ONE.value, Proficiency.ONE.value),
+        (Proficiency.TWO.value, Proficiency.TWO.value),
+        (Proficiency.THREE.value, Proficiency.THREE.value),
+        (Proficiency.FOUR.value, Proficiency.FOUR.value),
+        (Proficiency.FIVE.value, Proficiency.FIVE.value),
+        (Proficiency.SIX.value, Proficiency.SIX.value),
+        (Proficiency.SEVEN.value, Proficiency.SEVEN.value),
+        (Proficiency.EIGHT.value, Proficiency.EIGHT.value),
+        (Proficiency.NINE.value, Proficiency.NINE.value),
+        (Proficiency.TEN.value, Proficiency.TEN.value),
     )
 
     candidate = models.ForeignKey(

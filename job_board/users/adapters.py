@@ -7,11 +7,10 @@ from django.http import HttpRequest
 from django.shortcuts import resolve_url
 
 from candidate.models import Candidate
+from job_board.users.models import UserProfile
 from recruiter.models import Recruiter
 
 from . import constants, utils
-
-from job_board.users.models import UserProfile
 from .constants import Role
 
 
@@ -23,9 +22,9 @@ class AccountAdapter(DefaultAccountAdapter):
         profile = UserProfile.objects.create(role=form.role, user=user)
         user.profile = profile
         user = super().save_user(request, user, form, commit)
-        if form.role == constants.Role.RECRUITER.name:
+        if form.role == constants.Role.RECRUITER:
             Recruiter.objects.create(profile=profile)
-        elif form.role == constants.Role.CANDIDATE.name:
+        elif form.role == constants.Role.CANDIDATE:
             Candidate.objects.create(
                 resume=form.cleaned_data["resume"], profile=profile
             )
@@ -34,7 +33,7 @@ class AccountAdapter(DefaultAccountAdapter):
         utils.set_user_role(request)
         if request.user.role == Role.CANDIDATE:
             if not request.user.profile.candidate.onboarding_done:
-                return resolve_url("candidate:onboarding")
+                return resolve_url("candidate:preferences")
             return resolve_url("candidate:dashboard")
         if request.user.role == Role.RECRUITER:
             return resolve_url("recruiter:dashboard")

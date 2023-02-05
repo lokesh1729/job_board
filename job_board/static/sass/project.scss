@@ -5,7 +5,10 @@
 @import './custom_bootstrap_vars.scss';
 @import '../../../node_modules/bootstrap/scss/bootstrap';
 @import '../../../node_modules/select2/dist/css/select2';
-@import '../css/django_select2';
+
+.change-form select.django-select2 {
+  width: 20em;
+}
 
 $fa-font-path: '../fonts/fontawesome';
 
@@ -23,7 +26,7 @@ $fa-font-path: '../fonts/fontawesome';
 
 @layer components {
   .rounded-step {
-    @apply tw-relative tw-h-16 tw-w-16 tw-rounded-full tw-bg-gray-600 tw-text-white tw-shadow-md md:tw-h-20 md:tw-w-20 lg:tw-h-24 lg:tw-w-24 xl:tw-h-32 xl:tw-w-32 2xl:tw-h-40 2xl:tw-w-40;
+    @apply tw-relative tw-rounded-full tw-bg-gray-600 tw-text-white tw-shadow-md md:tw-h-12 md:tw-w-12 lg:tw-h-16 lg:tw-w-16 xl:tw-h-20 xl:tw-w-20 2xl:tw-h-24 2xl:tw-w-24;
   }
 
   .textinput {
@@ -47,11 +50,11 @@ $fa-font-path: '../fonts/fontawesome';
   }
 
   .step-icon {
-    @apply tw-relative tw-top-1/4 tw-left-1/3 tw-inline-block tw-text-xl lg:tw-text-2xl xl:tw-text-4xl;
+    @apply tw-relative tw-top-1/4 tw-left-1/3 tw-inline-block sm:tw-text-lg md:tw-text-xl lg:tw-text-2xl xl:tw-text-3xl;
   }
 
   .step-text {
-    @apply tw-text-xl tw-font-semibold tw-text-gray-800 lg:tw-text-2xl xl:tw-text-3xl 2xl:tw-text-4xl;
+    @apply tw-text-base tw-font-semibold tw-text-gray-800 lg:tw-text-xl xl:tw-text-2xl;
   }
 
   .form--wrapper {

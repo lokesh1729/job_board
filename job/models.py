@@ -18,7 +18,6 @@ JOB_STATUS_CHOICES = (
 
 class Category(BaseModel, SlugModel):
     name = models.CharField(_("Category Name"), max_length=100)
-    slug = models.SlugField(_("Category Slug"), primary_key=True)
 
 
 class Job(BaseModel):

@@ -1,51 +1,53 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
 {% block content %}
-<div class="tw-mx-2 lg:tw-mx-4">
-  <div class="tw-flex tw-flex-col tw-max-h-full tw-p-2 lg:tw-p-4">
-      {% include './step_header.html' %}
-      <div class="tw-mt-8">
-        {% for form in form_data %}
-          <div class="tw-flex tw-flex-col tw-content-between">
-            <form
-              data-step-number="{{forloop.counter}}"
-              method="POST"
-              action="{{form.action}}"
-              name="{{form.name}}"
-              novalidate
-              id="{{form.data_link_to}}"
-              class="form--wrapper needs-validation"
-            >
-              {% csrf_token %}
-              {% if form.context_data|length > 0 %}
-                {% for obj in form.context_data %}
-                  {% include './step.html' with index=forloop.counter obj=obj form=form %}
-                {% endfor %}
-              {% else %}
-                {% include './step.html' with index=1 obj=None form=form %}
-              {% endif %}
-            </form>
-            <div class="tw-mt-4 lg:tw-mt-8 tw-flex tw-justify-end">
-                <button
-                    data-step-number="{{forloop.counter}}"
-                    autocomplete="off"
-                    disabled
-                    type="button"
-                    class="prev-btn btn btn-primary tw-text-center"
-                >
-                Previous
-                </button>
-                <button
-                    data-step-number="{{forloop.counter}}"
-                    autocomplete="off"
-                    type="button"
-                    class="next-btn btn btn-primary tw-text-center tw-ml-8 lg:tw-ml-16"
-                >
-                Next
-                </button>
+    {{ btn_mapping|json_script:"btn_mapping" }}
+    {{ step_header_sequence|json_script:"step_header_sequence" }}
+    <div class="tw-mx-2 lg:tw-mx-4">
+        <div class="tw-flex tw-flex-col tw-max-h-full tw-p-2 lg:tw-p-4">
+            {% include "./step_header.html" %}
+            <div class="tw-mt-8">
+                <form method="post"
+                      action="{{ form_action }}"
+                      novalidate
+                      id="{{ form_id }}"
+                      class="needs-validation">
+                    {% csrf_token %}
+                    {{ form.management_form }}
+                    {% for each_form in form %}
+                        <div class="tw-flex tw-flex-col tw-content-between form--wrapper"
+                             data-form-index="{{ forloop.counter0 }}">
+                            {% crispy each_form %}
+                            {% if show_add_remove_btn %}
+                                <div class="tw-my-8 tw-mr-16 tw-flex tw-justify-end add-form-row">
+                                    <button data-step-number="{{ forloop.counter }}"
+                                            type="button"
+                                            class="btn btn-primary tw-text-center {{ add_btn_class }}">
+                                        {{ add_btn_text }}
+                                    </button>
+                                    <button data-step-number="{{ forloop.counter }}"
+                                            autocomplete="off"
+                                            type="button"
+                                            class="btn btn-danger tw-ml-16 tw-text-center {{ remove_btn_class }}">
+                                        {{ remove_btn_text }}
+                                    </button>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </form>
+                <div class="tw-mt-4 lg:tw-mt-8 tw-flex tw-justify-end">
+                    <a href="{{ success_url }}"
+                       autocomplete="off"
+                       class="skip-btn btn btn-primary tw-text-center">Skip</a>
+                    <button autocomplete="off"
+                            type="submit"
+                            form="{{ form_id }}"
+                            class="next-btn btn btn-primary tw-text-center tw-ml-8 lg:tw-ml-16">
+                        Submit & Proceed
+                    </button>
+                </div>
             </div>
         </div>
-        {% endfor %}
-      </div>
-  </div>
-</div>
-{% endblock %}
+    </div>
+{% endblock content %}

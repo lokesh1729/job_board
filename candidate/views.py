@@ -1,33 +1,32 @@
-import copy
-import json
 import logging
-
-from typing import Any
-from typing import Dict
+from typing import Any, Dict
 
 from allauth.account import views
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.forms import modelformset_factory
 from django.shortcuts import redirect
-from django.urls import reverse
-from django.views.generic import TemplateView
-from django.db.models import F
+from django.urls import reverse, reverse_lazy
+from django.views.generic import FormView, TemplateView
 
-from candidate.forms import CandidateSignupForm
+from candidate.forms import (
+    CandidateEducationForm,
+    CandidateExperienceForm,
+    CandidatePreferenceForm,
+    CandidateProjectForm,
+    CandidateSignupForm,
+    CandidateSkillForm,
+)
 from candidate.models import (
     CandidateEducation,
-    CandidateSkill,
-    CandidateProject,
-    Candidate,
-    School,
     CandidateExperience,
-    Skill,
+    CandidatePreference,
+    CandidateProject,
+    CandidateSkill,
 )
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import JsonResponse, HttpResponseBadRequest
-from job_board.users.constants import Role
 from common.mixins import RolePermissionMixin
+from job_board.users.constants import Role
+
 from .constants import OnboardingSteps
-from .utils import sanitize_data
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +38,7 @@ class CandidateSignupView(views.SignupView):
 
     def get_form_kwargs(self) -> Dict[str, Any]:
         kwargs = super().get_form_kwargs()
-        kwargs["role"] = Role.CANDIDATE.name
+        kwargs["role"] = Role.CANDIDATE
         return kwargs
 
 
@@ -53,225 +52,302 @@ class CandidateDashboardView(LoginRequiredMixin, RolePermissionMixin, TemplateVi
 
     def get(self, request, *args, **kwargs):
         if not request.user.profile.candidate.onboarding_done:
-            return redirect(reverse("candidate:onboarding"))
+            return redirect(reverse("candidate:preferences"))
         return super().get(request, *args, **kwargs)
 
 
-class CandidateOnboardingView(LoginRequiredMixin, RolePermissionMixin, TemplateView):
+class CandidatePreferenceView(LoginRequiredMixin, RolePermissionMixin, FormView):
     template_name = "candidate/onboarding/main.html"
     role = Role.CANDIDATE
+    success_url = reverse_lazy("candidate:education")
+
+    def form_valid(self, form):
+        """If the form is valid, save the associated model."""
+        form.save()
+        return super().form_valid(form)
+
+    def get_form_class(self):
+        extra = 1
+        if len(self.get_initial()) > 0:
+            extra = 0
+        return modelformset_factory(
+            CandidatePreference, form=CandidatePreferenceForm, extra=extra
+        )
+
+    def get_form_kwargs(self) -> Dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        kwargs["form_kwargs"] = {"candidate": self.request.user.profile.candidate}
+        return kwargs
+
+    def get_initial(self) -> Dict[str, Any]:
+        return CandidatePreference.objects.filter(
+            candidate=self.request.user.profile.candidate
+        ).values(
+            "id",
+            "current_city",
+            "desired_cities",
+            "expected_salary",
+            "current_salary",
+            "job_search_status",
+            "profile_privacy",
+            "total_yoe",
+        )
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        candidate = self.request.user.profile.candidate
-        projects = CandidateProject.objects.raw(
-            """
-            SELECT ARRAY_AGG("skills") as skills, id, name, description
-                FROM (
-                        SELECT "candidate_candidateproject"."id",
-                            "candidate_candidateproject"."name",
-                            "candidate_candidateproject"."description",
-                            "candidate_skill"."name" AS "skills"
-                            FROM "candidate_candidateproject"
-                            LEFT OUTER JOIN "candidate_candidateproject_skills_used"
-                            ON ("candidate_candidateproject"."id" = "candidate_candidateproject_skills_used"."candidateproject_id")
-                            LEFT OUTER JOIN "candidate_skill"
-                            ON ("candidate_candidateproject_skills_used"."skill_id" = "candidate_skill"."name")
-                        WHERE "candidate_candidateproject"."candidate_id" = %s
-                ) as tbl1 GROUP BY id, name, description;
-            """
-            % candidate.pk
+        context.update(
+            {
+                "step_header_mapping": OnboardingSteps.STEP_HEADER_MAPPING,
+                "step_header_sequence": list(
+                    map(
+                        lambda x: x["data_link_to"], OnboardingSteps.STEP_HEADER_MAPPING
+                    )
+                ),
+                "form_action": reverse("candidate:preferences"),
+                "form_id": OnboardingSteps.CANDIDATE_PREFERENCES,
+                "btn_mapping": OnboardingSteps.ADD_REMOVE_BTN_MAPPING,
+                "show_add_remove_btn": False,
+                "success_url": self.get_success_url(),
+            }
         )
-        form_data = copy.deepcopy(OnboardingSteps.STEPS_MAPPING)
-        form_data[0]["context_data"] = candidate.candidate_educations.values(
-            "pk", "degree", "from_date", "to_date", school_name=F("school__name")
+        return context
+
+
+class CandidateEducationNew(LoginRequiredMixin, RolePermissionMixin, FormView):
+    template_name = "candidate/onboarding/main.html"
+    role = Role.CANDIDATE
+    success_url = reverse_lazy("candidate:work")
+
+    def form_valid(self, form):
+        """If the form is valid, save the associated model."""
+        form.save()
+        return super().form_valid(form)
+
+    def get_form_class(self):
+        extra = 1
+        if len(self.get_initial()) > 0:
+            extra = 0
+        return modelformset_factory(
+            CandidateEducation, form=CandidateEducationForm, extra=extra
         )
-        form_data[1]["context_data"] = candidate.candidate_experiences.values(
-            "pk", "company", "role", "responsibilities", "from_date", "to_date"
+
+    def get_form_kwargs(self) -> Dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        kwargs["form_kwargs"] = {"candidate": self.request.user.profile.candidate}
+        return kwargs
+
+    def get_initial(self) -> Dict[str, Any]:
+        return CandidateEducation.objects.filter(
+            candidate=self.request.user.profile.candidate
+        ).values("id", "school", "degree", "from_date", "to_date")
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context.update(
+            {
+                "step_header_mapping": OnboardingSteps.STEP_HEADER_MAPPING,
+                "step_header_sequence": list(
+                    map(
+                        lambda x: x["data_link_to"], OnboardingSteps.STEP_HEADER_MAPPING
+                    )
+                ),
+                "form_action": reverse("candidate:education"),
+                "form_id": OnboardingSteps.EDUCATION,
+                "show_add_remove_btn": True,
+                "add_btn_class": OnboardingSteps.STEPS_MAPPING[
+                    OnboardingSteps.EDUCATION
+                ]["add_btn_class"],
+                "add_btn_text": OnboardingSteps.STEPS_MAPPING[
+                    OnboardingSteps.EDUCATION
+                ]["add_btn_text"],
+                "remove_btn_text": OnboardingSteps.STEPS_MAPPING[
+                    OnboardingSteps.EDUCATION
+                ]["remove_btn_text"],
+                "remove_btn_class": OnboardingSteps.STEPS_MAPPING[
+                    OnboardingSteps.EDUCATION
+                ]["remove_btn_class"],
+                "btn_mapping": OnboardingSteps.ADD_REMOVE_BTN_MAPPING,
+                "success_url": self.get_success_url(),
+            }
         )
-        form_data[2]["context_data"] = list(
-            map(
-                lambda project: {
-                    "pk": project.id,
-                    "name": project.name,
-                    "description": project.description,
-                    "skills": ", ".join(project.skills),
-                },
-                projects,
-            )
+        return context
+
+
+class CandidateWorkView(LoginRequiredMixin, RolePermissionMixin, FormView):
+    template_name = "candidate/onboarding/main.html"
+    role = Role.CANDIDATE
+    success_url = reverse_lazy("candidate:projects")
+
+    def form_valid(self, form):
+        """If the form is valid, save the associated model."""
+        form.save()
+        return super().form_valid(form)
+
+    def get_form_class(self):
+        extra = 1
+        if len(self.get_initial()) > 0:
+            extra = 0
+        return modelformset_factory(
+            CandidateExperience, form=CandidateExperienceForm, extra=extra
         )
-        form_data[3]["context_data"] = candidate.candidate_skills.values(
-            "pk",
-            proficiency=F("skill__proficiency"),
-            yoe=F("skill__yoe"),
-            name=F("skill__name"),
+
+    def get_form_kwargs(self) -> Dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        kwargs["form_kwargs"] = {"candidate": self.request.user.profile.candidate}
+        return kwargs
+
+    def get_initial(self) -> Dict[str, Any]:
+        return CandidateExperience.objects.filter(
+            candidate=self.request.user.profile.candidate
+        ).values("id", "company", "role", "responsibilities", "from_date", "to_date")
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context.update(
+            {
+                "step_header_mapping": OnboardingSteps.STEP_HEADER_MAPPING,
+                "step_header_sequence": list(
+                    map(
+                        lambda x: x["data_link_to"], OnboardingSteps.STEP_HEADER_MAPPING
+                    )
+                ),
+                "form_action": reverse("candidate:work"),
+                "form_id": OnboardingSteps.WORK,
+                "show_add_remove_btn": True,
+                "add_btn_class": OnboardingSteps.STEPS_MAPPING[OnboardingSteps.WORK][
+                    "add_btn_class"
+                ],
+                "add_btn_text": OnboardingSteps.STEPS_MAPPING[OnboardingSteps.WORK][
+                    "add_btn_text"
+                ],
+                "remove_btn_text": OnboardingSteps.STEPS_MAPPING[OnboardingSteps.WORK][
+                    "remove_btn_text"
+                ],
+                "remove_btn_class": OnboardingSteps.STEPS_MAPPING[OnboardingSteps.WORK][
+                    "remove_btn_class"
+                ],
+                "btn_mapping": OnboardingSteps.ADD_REMOVE_BTN_MAPPING,
+                "success_url": self.get_success_url(),
+            }
         )
-        return {
-            **context,
-            "candidate": candidate,
-            "step_header_mapping": OnboardingSteps.STEP_HEADER_MAPPING,
-            "form_data": form_data,
-        }
+        return context
 
 
-@login_required
-@user_passes_test(
-    lambda user: user.profile
-    and user.profile.candidate
-    and isinstance(user.profile.candidate, Candidate)
-)
-def education_details(request):
-    if request.is_ajax() and request.method == "POST":
-        req_body = json.loads(request.body)
-        candidate = request.user.profile.candidate
-        logger.info("education_details : got req_body %s for candidate %s", req_body, candidate)
-        data = req_body["data"]
-        assert data is not None
-        data = sanitize_data(data)
-        result = []
-        for ele in data:
-            school, _ = School.objects.get_or_create(name=ele["edu-school"])
-            if "pk" not in ele:
-                result.append(
-                    CandidateEducation.objects.create(
-                        candidate=candidate,
-                        school=school,
-                        degree=ele["edu-degree"],
-                        from_date=ele["edu-from-date"],
-                        to_date=ele["edu-to-date"],
-                    ).pk
-                )
-            else:
-                CandidateEducation.objects.filter(pk=ele["pk"]).update(
-                    school=school,
-                    degree=ele["edu-degree"],
-                    from_date=ele["edu-from-date"],
-                    to_date=ele["edu-to-date"],
-                )
-                result.append(ele["pk"])
-        logger.info("result is %s", result)
-        return JsonResponse({"result": result})
-    else:
-        return HttpResponseBadRequest("bad request")
+class CandidateProjectView(LoginRequiredMixin, RolePermissionMixin, FormView):
+    template_name = "candidate/onboarding/main.html"
+    role = Role.CANDIDATE
+    success_url = reverse_lazy("candidate:skills")
+
+    def form_valid(self, form):
+        """If the form is valid, save the associated model."""
+        form.save()
+        return super().form_valid(form)
+
+    def get_form_class(self):
+        extra = 1
+        if len(self.get_initial()) > 0:
+            extra = 0
+        return modelformset_factory(
+            CandidateProject, form=CandidateProjectForm, extra=extra
+        )
+
+    def get_form_kwargs(self) -> Dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        kwargs["form_kwargs"] = {"candidate": self.request.user.profile.candidate}
+        return kwargs
+
+    def get_initial(self) -> Dict[str, Any]:
+        return CandidateProject.objects.filter(
+            candidate=self.request.user.profile.candidate
+        ).values("id", "name", "description", "skills_used")
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context.update(
+            {
+                "step_header_mapping": OnboardingSteps.STEP_HEADER_MAPPING,
+                "step_header_sequence": list(
+                    map(
+                        lambda x: x["data_link_to"], OnboardingSteps.STEP_HEADER_MAPPING
+                    )
+                ),
+                "form_action": reverse("candidate:projects"),
+                "show_add_remove_btn": True,
+                "form_id": OnboardingSteps.PROJECTS,
+                "add_btn_class": OnboardingSteps.STEPS_MAPPING[
+                    OnboardingSteps.PROJECTS
+                ]["add_btn_class"],
+                "add_btn_text": OnboardingSteps.STEPS_MAPPING[OnboardingSteps.PROJECTS][
+                    "add_btn_text"
+                ],
+                "remove_btn_text": OnboardingSteps.STEPS_MAPPING[
+                    OnboardingSteps.PROJECTS
+                ]["remove_btn_text"],
+                "remove_btn_class": OnboardingSteps.STEPS_MAPPING[
+                    OnboardingSteps.PROJECTS
+                ]["remove_btn_class"],
+                "btn_mapping": OnboardingSteps.ADD_REMOVE_BTN_MAPPING,
+                "success_url": self.get_success_url(),
+            }
+        )
+        return context
 
 
-@login_required
-@user_passes_test(
-    lambda user: user.profile
-    and user.profile.candidate
-    and isinstance(user.profile.candidate, Candidate)
-)
-def work_details(request):
-    if request.is_ajax() and request.method == "POST":
-        req_body = json.loads(request.body)
-        candidate = request.user.profile.candidate
-        logger.info("work_details : got req_body %s for candidate %s", req_body, candidate)
-        data = req_body["data"]
-        assert data is not None
-        data = sanitize_data(data)
-        result = []
-        for ele in data:
-            if "pk" not in ele:
-                result.append(
-                    CandidateExperience.objects.create(
-                        candidate=candidate,
-                        from_date=ele["work-from-date"],
-                        to_date=ele["work-to-date"],
-                        company=ele["work-company"],
-                        role=ele["work-role"],
-                        responsibilities=ele["work-responsibilities"],
-                    ).pk
-                )
-            else:
-                CandidateExperience.objects.filter(pk=ele["pk"]).update(
-                    from_date=ele["work-from-date"],
-                    to_date=ele["work-to-date"],
-                    company=ele["work-company"],
-                    role=ele["work-role"],
-                    responsibilities=ele["work-responsibilities"],
-                )
-                result.append(ele["pk"])
-        logger.info("result is %s", result)
-        return JsonResponse({"result": result})
-    else:
-        return HttpResponseBadRequest("bad request")
+class CandidateSkillView(LoginRequiredMixin, RolePermissionMixin, FormView):
+    template_name = "candidate/onboarding/main.html"
+    role = Role.CANDIDATE
+    success_url = reverse_lazy("candidate:dashboard")
 
+    def form_valid(self, form):
+        """If the form is valid, save the associated model."""
+        form.save()
+        return super().form_valid(form)
 
-@login_required
-@user_passes_test(
-    lambda user: user.profile
-    and user.profile.candidate
-    and isinstance(user.profile.candidate, Candidate)
-)
-def project_details(request):
-    if request.is_ajax() and request.method == "POST":
-        req_body = json.loads(request.body)
-        candidate = request.user.profile.candidate
-        logger.info("project_details : got req_body %s for candidate %s", req_body, candidate)
-        data = req_body["data"]
-        assert data is not None
-        data = sanitize_data(data)
-        result = []
-        for ele in data:
-            skills = []
-            for skill in ele["project-skills"].split(","):
-                skill = skill.strip()
-                s_obj, _ = Skill.objects.get_or_create(name=skill)
-                skills.append(s_obj)
-            if "pk" not in ele:
-                obj = CandidateProject.objects.create(
-                    candidate=candidate,
-                    name=ele["project-name"],
-                    description=ele["project-description"],
-                )
-                obj.skills_used.set(skills)
-                result.append(obj.pk)
-            else:
-                obj = CandidateProject.objects.get(pk=ele["pk"])
-                obj.name = ele["project-name"]
-                obj.description = ele["project-description"]
-                obj.skills_used.set(skills)
-                obj.save()
-                result.append(ele["pk"])
-        logger.info("result is %s", result)
-        return JsonResponse({"result": result})
-    else:
-        return HttpResponseBadRequest("bad request")
+    def get_form_class(self):
+        extra = 1
+        if len(self.get_initial()) > 0:
+            extra = 0
+        return modelformset_factory(
+            CandidateSkill, form=CandidateSkillForm, extra=extra
+        )
 
+    def get_form_kwargs(self) -> Dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        kwargs["form_kwargs"] = {"candidate": self.request.user.profile.candidate}
+        return kwargs
 
-@login_required
-@user_passes_test(
-    lambda user: user.profile
-    and user.profile.candidate
-    and isinstance(user.profile.candidate, Candidate)
-)
-def skill_details(request):
-    if request.is_ajax() and request.method == "POST":
-        req_body = json.loads(request.body)
-        candidate = request.user.profile.candidate
-        logger.info("skill_details : got req_body %s for candidate %s", req_body, candidate)
-        data = req_body["data"]
-        assert data is not None
-        data = sanitize_data(data)
-        result = []
-        for ele in data:
-            skill, _ = Skill.objects.update_or_create(
-                name=ele["skill-name"],
-                defaults={
-                    "proficiency": int(ele["skill-proficiency"]),
-                    "yoe": int(ele["skill-yoe"]),
-                },
-            )
-            if "pk" not in ele:
-                result.append(
-                    CandidateSkill.objects.create(candidate=candidate, skill=skill).pk
-                )
-            else:
-                CandidateSkill.objects.filter(pk=ele["pk"]).update(skill=skill)
-                result.append(ele["pk"])
-        candidate.onboarding_done = True
-        candidate.save()
-        logger.info("result is %s", result)
-        return JsonResponse({"result": result})
-    else:
-        return HttpResponseBadRequest("bad request")
+    def get_initial(self) -> Dict[str, Any]:
+        return CandidateSkill.objects.filter(
+            candidate=self.request.user.profile.candidate
+        ).values("id", "skill", "proficiency", "yoe")
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context.update(
+            {
+                "step_header_mapping": OnboardingSteps.STEP_HEADER_MAPPING,
+                "step_header_sequence": list(
+                    map(
+                        lambda x: x["data_link_to"], OnboardingSteps.STEP_HEADER_MAPPING
+                    )
+                ),
+                "form_action": reverse("candidate:skills"),
+                "form_id": OnboardingSteps.SKILLS,
+                "show_add_remove_btn": True,
+                "add_btn_class": OnboardingSteps.STEPS_MAPPING[OnboardingSteps.SKILLS][
+                    "add_btn_class"
+                ],
+                "add_btn_text": OnboardingSteps.STEPS_MAPPING[OnboardingSteps.SKILLS][
+                    "add_btn_text"
+                ],
+                "remove_btn_text": OnboardingSteps.STEPS_MAPPING[
+                    OnboardingSteps.SKILLS
+                ]["remove_btn_text"],
+                "remove_btn_class": OnboardingSteps.STEPS_MAPPING[
+                    OnboardingSteps.SKILLS
+                ]["remove_btn_class"],
+                "btn_mapping": OnboardingSteps.ADD_REMOVE_BTN_MAPPING,
+                "success_url": self.get_success_url(),
+            }
+        )
+        return context
