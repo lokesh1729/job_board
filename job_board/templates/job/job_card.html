@@ -1,8 +1,8 @@
 {% load static i18n user_filters %}
-<div class="tw-flex tw-flex-col tw-justify-between tw-items-center tw-w-full {% if display_edit_row %}tw-h-52 md:tw-h-44 {% else %}tw-h-44 md:tw-h-36 {% endif %}tw-my-2 md:tw-my-4 tw-shadow-lg tw-p-6">
+<div class="tw-flex tw-flex-col tw-justify-between tw-items-center tw-w-full {% if display_edit_row %}tw-h-44 md:tw-h-36 {% else %}tw-h-36 md:tw-h-28 {% endif %}tw-my-2 md:tw-my-4 tw-shadow-lg tw-p-4">
     <div class="tw-flex tw-flex-row tw-justify-between tw-w-full">
         <div class="tw-flex tw-flex-row tw-justify-start tw-items-center">
-            <img src="{{ job.logo }}" width="48" height="48" alt="Logo" />
+            <img src="{{ job.logo }}" width="36" height="36" alt="Logo" />
             <span class="tw-ml-2 lg:tw-ml-4 xl:tw-ml-6 2xl:tw-ml-6 tw-text-lg lg:tw-text-xl xl:tw-text-2xl">{{ job.position }} at {{ job.company_name }}</span>
         </div>
         <div class="tw-flex tw-flex-row tw-justify-end tw-items-center">

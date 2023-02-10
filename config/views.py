@@ -21,12 +21,12 @@ class HomepageView(LoginRedirectMixin, TemplateView):
             **context,
             "latest_jobs": repositories.list_jobs(
                 queryset=Job.objects.order_by("-created_on")
-            )[:10],
+            )[:5],
             "popular_jobs": repositories.list_jobs(
                 queryset=Job.objects.order_by("-score")
-            )[:10],
+            )[:5],
             "remote_jobs": repositories.list_jobs(
                 queryset=Job.objects.filter(remote=Remote.FULLY_REMOTE.name)
-            )[:10],
+            )[:5],
             "filter_form": filter.form,
         }
