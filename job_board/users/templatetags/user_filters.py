@@ -20,6 +20,7 @@ def cool_number(value, num_decimals=2):
     """
     Django template filter to convert regular numbers to a
     cool format (ie: 2K, 434.4K, 33M...)
+    round the numbers to millions, billions etc...
     :param value: number
     :param num_decimals: Number of decimal digits
     """

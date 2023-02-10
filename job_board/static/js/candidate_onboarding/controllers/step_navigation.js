@@ -25,8 +25,9 @@ import { stepsSequence } from './constants';
  *
  **/
 function activateCurrStep(stepName) {
-  console.log('activating currStep ' + stepName);
-  const ele = $(`#step-header div[data-link-to=${stepName}]`);
+  if (!stepName) {
+    return;
+  }
   $(`#${stepName}`).addClass('needs-validation');
   $(`#${stepName}`).removeClass('was-validated');
   $(`#${stepName}`).parent().show();

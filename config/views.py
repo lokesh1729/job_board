@@ -3,11 +3,12 @@ contains home page view
 """
 
 from django.views.generic import TemplateView
-from job.models import Job
 
-from recruiter import repositories
 from common.mixins import LoginRedirectMixin
+from job.constants import Remote
 from job.filters import HomepageFilter
+from job.models import Job
+from recruiter import repositories
 
 
 class HomepageView(LoginRedirectMixin, TemplateView):
@@ -18,10 +19,14 @@ class HomepageView(LoginRedirectMixin, TemplateView):
         filter = HomepageFilter(self.request.GET, queryset=Job.objects.all())
         return {
             **context,
-            "jobs": repositories.list_jobs(
-                queryset=Job.objects.filter(
-                    pk__in=filter.qs.values_list("pk", flat=True)
-                )
-            ),
+            "latest_jobs": repositories.list_jobs(
+                queryset=Job.objects.order_by("-created_on")
+            )[:10],
+            "popular_jobs": repositories.list_jobs(
+                queryset=Job.objects.order_by("-score")
+            )[:10],
+            "remote_jobs": repositories.list_jobs(
+                queryset=Job.objects.filter(remote=Remote.FULLY_REMOTE.name)
+            )[:10],
             "filter_form": filter.form,
         }

@@ -1,13 +1,12 @@
+from cities_light.models import City
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django.utils.text import slugify
-from cities_light.models import City
 
+from common.models import BaseModel, SlugModel
 from job_board.users.models import UserProfile
-from common.models import BaseModel
 
 
-class Company(BaseModel):
+class Company(BaseModel, SlugModel):
     class Meta:
         abstract = False
         verbose_name_plural = "companies"

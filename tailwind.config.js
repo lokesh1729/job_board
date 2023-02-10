@@ -1,5 +1,5 @@
 module.exports = {
-  important: false,
+  important: true,
   content: [
     './job_board/templates/**/*.html',
     './job_board/static/sass/**/*.scss',
