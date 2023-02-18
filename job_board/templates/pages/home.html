@@ -16,37 +16,40 @@
         <i id="angles-down-icon"
            class="fa-solid fa-angles-down tw-text-xl tw-text-black"></i>
     </div>
-    <div class="tw-flex tw-justify-end tw-w-full tw-my-4">
-        <div class="tw-flex tw-justify-between tw-w-1/2 tw-mx-12">
-            <h3 class="tw-text-center">Latest Jobs</h3>
-            <a class="link-primary" href="{% url 'job:latest_jobs' %}">View All</a>
-        </div>
-    </div>
     <div class="tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-h-full">
-        {% for job in latest_jobs %}
+        {% for job in jobs %}
             {% include "job/job_card.html" with job=job %}
         {% endfor %}
     </div>
-    <div class="tw-flex tw-justify-end tw-w-full tw-my-4">
-        <div class="tw-flex tw-justify-between tw-w-1/2 tw-mx-12">
-            <h3 class="tw-text-center">Popular Jobs</h3>
-            <a class="link-primary" href="{% url 'job:latest_jobs' %}">View All</a>
-        </div>
-    </div>
-    <div class="tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-h-full">
-        {% for job in popular_jobs %}
-            {% include "job/job_card.html" with job=job %}
-        {% endfor %}
-    </div>
-    <div class="tw-flex tw-justify-end tw-w-full tw-my-4">
-        <div class="tw-flex tw-justify-between tw-w-1/2 tw-mx-12">
-            <h3 class="tw-text-center">Remote Jobs</h3>
-            <a class="link-primary" href="{% url 'job:latest_jobs' %}">View All</a>
-        </div>
-    </div>
-    <div class="tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-h-full">
-        {% for job in remote_jobs %}
-            {% include "job/job_card.html" with job=job %}
-        {% endfor %}
-    </div>
+    <nav class="tw-my-6 tw-w-full tw-flex tw-justify-center"
+         aria-label="pagination start">
+        <ul class="pagination">
+            <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
+                <a class="page-link" href="?page=1" tabindex="-1" aria-disabled="true">First</a>
+            </li>
+            <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
+                <a class="page-link"
+                   href="{% if page_obj.has_previous %}?page={{ page_obj.previous_page_number }} {% else %}#{% endif %}"
+                   tabindex="-1"
+                   aria-disabled="true">Previous</a>
+            </li>
+            {% for each_page in elided_pages %}
+                <li class="page-item {% if each_page == page_obj.number %}active{% endif %}">
+                    {% if each_page == '...' %}
+                        <a class="page-link" href="#">{{ each_page }}</a>
+                    {% else %}
+                        <a class="page-link" href="?page={{ each_page }}">{{ each_page }}</a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+            <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
+                <a class="page-link"
+                   href="{% if page_obj.has_next %}?page={{ page_obj.next_page_number }} {% else %}#{% endif %}">Next</a>
+            </li>
+            <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
+                <a class="page-link"
+                   href="{% if page_obj.has_next %}?page={{ page_obj.paginator.num_pages }}{% else %}#{% endif %}">Last</a>
+            </li>
+        </ul>
+    </nav>
 {% endblock content %}

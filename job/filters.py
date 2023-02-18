@@ -53,8 +53,8 @@ class HomepageFilter(django_filters.FilterSet):
     )
     company = django_filters.ModelMultipleChoiceFilter(
         queryset=Company.objects.all(),
-        field_name="company__name",
-        lookup_expr="icontains",
+        field_name="company",
+        # lookup_expr="icontains",
         label="Company",
         widget=ModelSelect2MultipleWidget(
             model=Company, search_fields=["name__icontains"]

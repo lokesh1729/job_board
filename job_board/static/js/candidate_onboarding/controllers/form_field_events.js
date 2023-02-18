@@ -102,18 +102,19 @@ const handleRemoveElement = (element, dataAttrVal, removeBtnClass) => {
   );
 };
 
-var unsaved = false;
+// var unsaved = false;
 
-$(':input').on('change', function () {
-  unsaved = true;
-});
+// $(':input').on('change', function () {
+//   unsaved = true;
+// });
 
-function unloadPage() {
-  if (unsaved) {
-    return 'You have unsaved changes on this page. Do you want to leave this page and discard your changes or stay on this page?';
-  }
-}
+// function unloadPage(event) {
+//   event.preventDefault();
+//   if (unsaved) {
+//     return 'You have unsaved changes on this page. Do you want to leave this page and discard your changes or stay on this page?';
+//   }
+// }
 
-window.onbeforeunload = unloadPage;
+// window.onbeforeunload = unloadPage;
 
 export { handleAddElement, handleRemoveElement };
