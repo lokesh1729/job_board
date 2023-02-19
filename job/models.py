@@ -1,14 +1,17 @@
 import random
+
+from cities_light.models import City
+from django.conf import settings
 from django.db import models
-from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.utils.text import slugify
-from django.conf import settings
+from django.utils.translation import gettext_lazy as _
 
 from candidate.models import Candidate
-from recruiter.models import Recruiter, Company
-from .constants import JobType, Remote, JobStatus
-from common.models import BaseModel, SlugModel, Skill
+from common.models import BaseModel, Skill, SlugModel
+from recruiter.models import Company, Recruiter
+
+from .constants import JobStatus, JobType, Remote
 
 JOB_STATUS_CHOICES = (
     (JobStatus.ACTIVE.name, JobStatus.ACTIVE.value),
@@ -18,6 +21,9 @@ JOB_STATUS_CHOICES = (
 
 class Category(BaseModel, SlugModel):
     name = models.CharField(_("Category Name"), max_length=100)
+
+    def __str__(self):
+        return self.name
 
 
 class Job(BaseModel):
@@ -67,7 +73,12 @@ class Job(BaseModel):
     min_yoe_required = models.IntegerField(_("Minimum years of experience required"))
     min_salary = models.BigIntegerField(_("Min Salary in USD"))
     max_salary = models.BigIntegerField(_("Max Salary in USD"))
-    location = models.CharField(_("Job Location"), max_length=255)
+    location = models.ForeignKey(
+        City,
+        on_delete=models.CASCADE,
+        related_name="jobs",
+        related_query_name="job",
+    )
     skills_required = models.ManyToManyField(
         Skill, related_name="jobs", related_query_name="jobs"
     )
@@ -83,9 +94,10 @@ class Job(BaseModel):
     categories = models.ManyToManyField(
         Category, related_name="jobs", related_query_name="jobs"
     )
+    score = models.PositiveIntegerField(_("Score"), default=0)
 
     def save(self, *args, **kwargs):
-        if self.pk is None:
+        if self.pk is None or self.pk == "":
             self.slug = slugify(
                 "%s-%s-%s"
                 % (

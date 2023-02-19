@@ -1,16 +1,17 @@
-from typing import Dict, Any
+from typing import Any, Dict
 
 from allauth.account import views
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import TemplateView, CreateView
 from django.urls import reverse_lazy
+from django.views.generic import CreateView, TemplateView
 
-from recruiter.forms import CompanyForm, RecruiterSignupForm
-from job_board.users.constants import Role
 from common.mixins import RolePermissionMixin
-from .models import Company
 from job.models import Job
+from job_board.users.constants import Role
+from recruiter.forms import CompanyForm, RecruiterSignupForm
+
 from . import repositories
+from .models import Company
 
 
 class RecruiterSignupView(views.SignupView):
@@ -22,7 +23,7 @@ class RecruiterSignupView(views.SignupView):
 
     def get_form_kwargs(self) -> Dict[str, Any]:
         kwargs = super().get_form_kwargs()
-        kwargs["role"] = Role.RECRUITER.name
+        kwargs["role"] = Role.RECRUITER
         return kwargs
 
 
