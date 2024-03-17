@@ -50,6 +50,7 @@ class HomepageFilter(django_filters.FilterSet):
         widget=ModelSelect2MultipleWidget(
             model=Skill, search_fields=["name__icontains"]
         ),
+        conjoined=True
     )
     company = django_filters.ModelMultipleChoiceFilter(
         queryset=Company.objects.all(),
@@ -59,6 +60,7 @@ class HomepageFilter(django_filters.FilterSet):
         widget=ModelSelect2MultipleWidget(
             model=Company, search_fields=["name__icontains"]
         ),
+        conjoined=True
     )
 
     class Meta:

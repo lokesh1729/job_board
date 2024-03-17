@@ -23,7 +23,7 @@ class HomepageView(LoginRedirectMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         filter = HomepageFilter(self.request.GET, queryset=Job.objects.all())
         queryset = repositories.list_jobs(
-            queryset=Job.objects.filter(pk__in=filter.qs.values_list("pk", flat=True))
+            queryset=filter.qs
         )
         paginator = Paginator(
             queryset,
